@@ -1,0 +1,22 @@
+<w:drawing xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+    <wp:anchor distT="152400" distB="152400" distL="152400" distR="152400" simplePos="0" relativeHeight="251682816" behindDoc="0" locked="0" layoutInCell="1" allowOverlap="1">
+        <wp:simplePos x="0" y="0"/>
+        <wp:positionH relativeFrom="page">
+            <wp:posOffset>179999</wp:posOffset>
+        </wp:positionH>
+        <wp:positionV relativeFrom="page">
+            <wp:posOffset>4527702</wp:posOffset>
+        </wp:positionV>
+        <wp:extent cx="7033227" cy="3810001"/>
+        <wp:effectExtent l="0" t="0" r="0" b="0"/>
+        <wp:wrapNone/>
+        <wp:docPr id="1073741848" name="officeArt object"/>
+        <wp:cNvGraphicFramePr/>
+        <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart">
+                <c:chart r:id="rId10"
+                    xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart"/>
+            </a:graphicData>
+        </a:graphic>
+    </wp:anchor>
+</w:drawing>
