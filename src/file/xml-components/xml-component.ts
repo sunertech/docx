@@ -4,7 +4,7 @@ import { IXmlableObject } from "./xmlable-object";
 export const EMPTY_OBJECT = Object.seal({});
 
 export abstract class XmlComponent extends BaseXmlComponent {
-    // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected root: (BaseXmlComponent | string | any)[];
 
     public constructor(rootKey: string) {
@@ -19,7 +19,6 @@ export abstract class XmlComponent extends BaseXmlComponent {
     // Child components can override this method to customize the XML representation, or execute side effects.
     public prepForXml(context: IContext): IXmlableObject | undefined {
         // Mutating the stack is required for performance reasons
-        // eslint-disable-next-line functional/immutable-data
         context.stack.push(this);
         const children = this.root
             .map((comp) => {
@@ -30,7 +29,6 @@ export abstract class XmlComponent extends BaseXmlComponent {
             })
             .filter((comp) => comp !== undefined); // Exclude undefined
 
-        // eslint-disable-next-line functional/immutable-data
         context.stack.pop();
         // If we only have a single IXmlableObject in our children array and it
         // represents our attributes, use the object itself as our children to
@@ -40,6 +38,17 @@ export abstract class XmlComponent extends BaseXmlComponent {
         return {
             [this.rootKey]: children.length ? (children.length === 1 && children[0]?._attr ? children[0] : children) : EMPTY_OBJECT,
         };
+    }
+
+    public replaceNamespace(current: string, replacement: string): void {
+        if (this.rootKey.startsWith(`${current}:`)) {
+            this.rootKey = this.rootKey.replace(`${current}:`, `${replacement}:`);
+        }
+        this.root.forEach((comp) => {
+            if (comp instanceof XmlComponent) {
+                comp.replaceNamespace(current, replacement);
+            }
+        });
     }
 
     /**

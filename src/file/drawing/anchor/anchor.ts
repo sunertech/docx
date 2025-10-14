@@ -1,12 +1,11 @@
 // http://officeopenxml.com/drwPicFloating.php
-import { IMediaData, IMediaDataTransformation } from "@file/media";
+import { IMediaDataTransformation } from "@file/media";
 import { XmlComponent } from "@file/xml-components";
 
-import { IDrawingOptions } from "../drawing";
 import { IFloating, createHorizontalPosition, createSimplePos, createVerticalPosition } from "../floating";
-import { Graphic } from "../inline/graphic";
+import { Graphic, GraphicOptions } from "../inline/graphic";
 import { TextWrappingType, WrapNone, WrapSquare, WrapTight, WrapTopAndBottom } from "../text-wrap";
-import { DocProperties } from "./../doc-properties/doc-properties";
+import { DocProperties, DocPropertiesOptions } from "./../doc-properties/doc-properties";
 import { createEffectExtent } from "./../effect-extent/effect-extent";
 import { createExtent } from "./../extent/extent";
 import { createGraphicFrameProperties } from "./../graphic-frame/graphic-frame-properties";
@@ -37,16 +36,20 @@ import { AnchorAttributes } from "./anchor-attributes";
 //     <xsd:attribute name="hidden" type="xsd:boolean" use="optional"/>
 //     <xsd:attribute name="allowOverlap" type="xsd:boolean" use="required"/>
 // </xsd:complexType>
+
+export type IAnchorCoreOptions = {
+    readonly floating?: IFloating;
+    readonly altText?: DocPropertiesOptions;
+};
+
+export type GraphicWrapperOptions = {
+    readonly transform: IMediaDataTransformation;
+};
+
+type IAnchorOptions = IAnchorCoreOptions & GraphicOptions & GraphicWrapperOptions;
+
 export class Anchor extends XmlComponent {
-    public constructor({
-        mediaData,
-        transform,
-        drawingOptions,
-    }: {
-        readonly mediaData: IMediaData;
-        readonly transform: IMediaDataTransformation;
-        readonly drawingOptions: IDrawingOptions;
-    }) {
+    public constructor({ uri, dataElement, transform, altText, ...options }: IAnchorOptions) {
         super("wp:anchor");
 
         const floating: IFloating = {
@@ -56,7 +59,7 @@ export class Anchor extends XmlComponent {
             layoutInCell: true,
             verticalPosition: {},
             horizontalPosition: {},
-            ...drawingOptions.floating,
+            ...options.floating,
         };
 
         this.root.push(
@@ -80,16 +83,16 @@ export class Anchor extends XmlComponent {
         this.root.push(createExtent({ x: transform.emus.x, y: transform.emus.y }));
         this.root.push(createEffectExtent({ top: 0, right: 0, bottom: 0, left: 0 }));
 
-        if (drawingOptions.floating !== undefined && drawingOptions.floating.wrap !== undefined) {
-            switch (drawingOptions.floating.wrap.type) {
+        if (options.floating !== undefined && options.floating.wrap !== undefined) {
+            switch (options.floating.wrap.type) {
                 case TextWrappingType.SQUARE:
-                    this.root.push(new WrapSquare(drawingOptions.floating.wrap, drawingOptions.floating.margins));
+                    this.root.push(new WrapSquare(options.floating.wrap, options.floating.margins));
                     break;
                 case TextWrappingType.TIGHT:
-                    this.root.push(new WrapTight(drawingOptions.floating.margins));
+                    this.root.push(new WrapTight(options.floating.margins));
                     break;
                 case TextWrappingType.TOP_AND_BOTTOM:
-                    this.root.push(new WrapTopAndBottom(drawingOptions.floating.margins));
+                    this.root.push(new WrapTopAndBottom(options.floating.margins));
                     break;
                 case TextWrappingType.NONE:
                 default:
@@ -99,8 +102,8 @@ export class Anchor extends XmlComponent {
             this.root.push(new WrapNone());
         }
 
-        this.root.push(new DocProperties(drawingOptions.docProperties));
+        this.root.push(new DocProperties(altText));
         this.root.push(createGraphicFrameProperties());
-        this.root.push(new Graphic({ mediaData, transform, outline: drawingOptions.outline }));
+        this.root.push(new Graphic({ uri, dataElement }));
     }
 }

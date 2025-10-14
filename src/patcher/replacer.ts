@@ -45,7 +45,6 @@ export const replacer = ({
             case PatchType.DOCUMENT: {
                 const parentElement = goToParentElementFromPath(json, renderedParagraph.pathToParagraph);
                 const elementIndex = getLastElementIndexFromPath(renderedParagraph.pathToParagraph);
-                // eslint-disable-next-line functional/immutable-data
                 parentElement.elements!.splice(elementIndex, 1, ...textJson);
                 break;
             }
@@ -83,7 +82,6 @@ export const replacer = ({
                     };
                 }
 
-                // eslint-disable-next-line functional/immutable-data
                 paragraphElement.elements!.splice(index, 1, left, ...newRunElements, patchedRightElement);
                 break;
             }

@@ -26,6 +26,6 @@ export const patchDetector = async ({ data }: PatchDetectorOptions): Promise<rea
 };
 
 const findPatchKeys = (text: string): readonly string[] => {
-    const pattern = /(?<=\{\{).+?(?=\}\})/gs;
+    const pattern = /(?<=\{\{)[\s\S]+?(?=\}\})/g;
     return text.match(pattern) ?? [];
 };

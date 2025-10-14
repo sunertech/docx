@@ -27,7 +27,6 @@ export const appendRelationship = (
     targetMode?: (typeof TargetModeType)[keyof typeof TargetModeType],
 ): readonly Element[] => {
     const relationshipElements = getFirstLevelElements(relationships, "Relationships");
-    // eslint-disable-next-line functional/immutable-data
     relationshipElements.push({
         attributes: {
             Id: `rId${id}`,

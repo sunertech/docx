@@ -1,17 +1,19 @@
 import { IMediaData } from "./data";
 
-export type IMediaTransformation = {
+export type SizeProperty = {
     readonly width: number;
     readonly height: number;
+};
+
+export type IMediaTransformation = {
     readonly flip?: {
         readonly vertical?: boolean;
         readonly horizontal?: boolean;
     };
     readonly rotation?: number;
-};
+} & SizeProperty;
 
 export class Media {
-    // eslint-disable-next-line functional/prefer-readonly-type
     private readonly map: Map<string, IMediaData>;
 
     public constructor() {

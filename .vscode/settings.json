@@ -6,5 +6,15 @@
     "prettier.tabWidth": 4,
     "prettier.arrowParens": "always",
     "prettier.bracketSpacing": true,
-    "eslint.useFlatConfig": true
+    "eslint.useFlatConfig": true,
+    "[typescript]": {
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true
+    },
+    "[xml]": {
+        "editor.tabSize": 2,
+    },
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
 }

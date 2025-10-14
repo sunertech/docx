@@ -1,13 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { Media } from "@file/media";
+import { IdentifierManager } from "./identifier-manager";
 
-import { ImageReplacer } from "./image-replacer";
-
-describe("ImageReplacer", () => {
+describe("IdentifierManager", () => {
     describe("#replace()", () => {
         it("should replace properly", () => {
-            const imageReplacer = new ImageReplacer();
+            const imageReplacer = new IdentifierManager();
             const result = imageReplacer.replace(
                 "test {test-image.png} test",
                 [
@@ -26,7 +24,7 @@ describe("ImageReplacer", () => {
                             },
                         },
                     },
-                ],
+                ].map((item) => item.fileName),
                 0,
             );
 
@@ -34,11 +32,12 @@ describe("ImageReplacer", () => {
         });
     });
 
-    describe("#getMediaData()", () => {
+    describe("#filter()", () => {
         it("should get media data", () => {
-            const imageReplacer = new ImageReplacer();
-            const result = imageReplacer.getMediaData("test {test-image} test", {
-                Array: [
+            const imageReplacer = new IdentifierManager();
+            const result = imageReplacer.filter(
+                "test {test-image} test",
+                [
                     {
                         stream: Buffer.from(""),
                         fileName: "test-image",
@@ -54,7 +53,8 @@ describe("ImageReplacer", () => {
                         },
                     },
                 ],
-            } as unknown as Media);
+                (item) => item.fileName,
+            );
 
             expect(result).to.have.length(1);
         });

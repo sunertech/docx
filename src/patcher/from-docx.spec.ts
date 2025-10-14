@@ -298,7 +298,7 @@ describe("from-docx", () => {
                 expect(output).to.not.be.undefined;
             });
 
-            it("should skiup UTF-16 types", async () => {
+            it("should skip UTF-16 types", async () => {
                 const zip = new JSZip();
 
                 zip.file("word/document.xml", MOCK_XML);

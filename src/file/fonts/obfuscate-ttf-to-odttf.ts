@@ -10,7 +10,6 @@ export const obfuscate = (buf: Uint8Array, fontKey: string): Uint8Array => {
 
     const hexStrings = guid.replace(/(..)/g, "$1 ").trim().split(" ");
     const hexNumbers = hexStrings.map((hexString) => parseInt(hexString, 16));
-    // eslint-disable-next-line functional/immutable-data
     hexNumbers.reverse();
 
     const bytesToObfuscate = buf.slice(obfuscatedStartOffset, obfuscatedEndOffset);

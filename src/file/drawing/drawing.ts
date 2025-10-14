@@ -1,11 +1,8 @@
-import { IMediaData } from "@file/media";
 import { XmlComponent } from "@file/xml-components";
 
-import { Anchor } from "./anchor";
-import { DocPropertiesOptions } from "./doc-properties/doc-properties";
-import { IFloating } from "./floating";
-import { createInline } from "./inline";
-import { OutlineOptions } from "./inline/graphic/graphic-data/pic/shape-properties/outline/outline";
+import { Anchor, GraphicWrapperOptions, IAnchorCoreOptions } from "./anchor";
+import { InlineCoreOptions, createInline } from "./inline";
+import { GraphicOptions } from "./inline/graphic";
 
 export type IDistance = {
     readonly distT?: number;
@@ -14,11 +11,9 @@ export type IDistance = {
     readonly distR?: number;
 };
 
-export type IDrawingOptions = {
-    readonly floating?: IFloating;
-    readonly docProperties?: DocPropertiesOptions;
-    readonly outline?: OutlineOptions;
-};
+export type DrawingCoreOptions = IAnchorCoreOptions & InlineCoreOptions;
+
+export type DrawingOptions = DrawingCoreOptions & GraphicOptions & GraphicWrapperOptions;
 
 // <xsd:complexType name="CT_Drawing">
 // <xsd:choice minOccurs="1" maxOccurs="unbounded">
@@ -28,20 +23,13 @@ export type IDrawingOptions = {
 // </xsd:complexType>
 
 export class Drawing extends XmlComponent {
-    public constructor(imageData: IMediaData, drawingOptions: IDrawingOptions = {}) {
+    public constructor({ floating, ...options }: DrawingOptions) {
         super("w:drawing");
 
-        if (!drawingOptions.floating) {
-            this.root.push(
-                createInline({
-                    mediaData: imageData,
-                    transform: imageData.transformation,
-                    docProperties: drawingOptions.docProperties,
-                    outline: drawingOptions.outline,
-                }),
-            );
+        if (floating) {
+            this.root.push(new Anchor({ ...options, floating }));
         } else {
-            this.root.push(new Anchor({ mediaData: imageData, transform: imageData.transformation, drawingOptions }));
+            this.root.push(createInline(options));
         }
     }
 }

@@ -12,10 +12,19 @@ import { PositiveUniversalMeasure, hpsMeasureValue } from "@util/values";
 //     <xsd:attribute name="val" type="s:ST_OnOff"/>
 // </xsd:complexType>
 export class OnOffElement extends XmlComponent {
-    public constructor(name: string, val: boolean | undefined = true) {
+    public constructor(name: string, val: boolean | undefined = true, namespace?: string) {
         super(name);
         if (val !== true) {
-            this.root.push(new Attributes({ val }));
+            this.root.push(new Attributes({ val }, namespace));
+        }
+    }
+}
+
+export class BooleanElement extends XmlComponent {
+    public constructor(name: string, val: boolean | undefined = true, namespace?: string) {
+        super(name);
+        if (val !== undefined) {
+            this.root.push(new Attributes({ val: Number(val) }, namespace));
         }
     }
 }
@@ -31,9 +40,9 @@ export class OnOffElement extends XmlComponent {
 // </xsd:simpleType>
 
 export class HpsMeasureElement extends XmlComponent {
-    public constructor(name: string, val: number | PositiveUniversalMeasure) {
+    public constructor(name: string, val: number | PositiveUniversalMeasure, namespace?: string) {
         super(name);
-        this.root.push(new Attributes({ val: hpsMeasureValue(val) }));
+        this.root.push(new Attributes({ val: hpsMeasureValue(val) }, namespace));
     }
 }
 
@@ -48,9 +57,9 @@ export class EmptyElement extends XmlComponent {}
 //     <xsd:attribute name="val" type="s:ST_String" use="required"/>
 // </xsd:complexType>
 export class StringValueElement extends XmlComponent {
-    public constructor(name: string, val: string) {
+    public constructor(name: string, val: string, namespace?: string) {
         super(name);
-        this.root.push(new Attributes({ val }));
+        this.root.push(new Attributes({ val }, namespace));
     }
 }
 
@@ -64,16 +73,16 @@ export const createStringElement = (name: string, value: string): XmlComponent =
 
 // This represents various number element types.
 export class NumberValueElement extends XmlComponent {
-    public constructor(name: string, val: number) {
+    public constructor(name: string, val: number, namespace?: string) {
         super(name);
-        this.root.push(new Attributes({ val }));
+        this.root.push(new Attributes({ val }, namespace));
     }
 }
 
 export class StringEnumValueElement<T extends string> extends XmlComponent {
-    public constructor(name: string, val: T) {
+    public constructor(name: string, val: T, namespace?: string) {
         super(name);
-        this.root.push(new Attributes({ val }));
+        this.root.push(new Attributes({ val }, namespace));
     }
 }
 

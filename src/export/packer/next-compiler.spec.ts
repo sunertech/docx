@@ -5,6 +5,7 @@ import { Footer, Header } from "@file/header";
 import { ImageRun, Paragraph } from "@file/paragraph";
 import * as convenienceFunctions from "@util/convenience-functions";
 
+import { ChartRun } from "@file/paragraph/run/chart-run";
 import { Compiler } from "./next-compiler";
 
 describe("Compiler", () => {
@@ -25,6 +26,9 @@ describe("Compiler", () => {
     describe("#compile()", () => {
         it(
             "should pack all the content",
+            {
+                timeout: 99999999,
+            },
             () => {
                 const file = new File({
                     sections: [],
@@ -53,13 +57,13 @@ describe("Compiler", () => {
                 expect(fileNames).to.include("[Content_Types].xml");
                 expect(fileNames).to.include("_rels/.rels");
             },
-            {
-                timeout: 99999999,
-            },
         );
 
         it(
             "should pack all additional headers and footers",
+            {
+                timeout: 99999999,
+            },
             () => {
                 const file = new File({
                     sections: [
@@ -107,13 +111,48 @@ describe("Compiler", () => {
                 expect(fileNames).to.include("word/footer2.xml");
                 expect(fileNames).to.include("word/_rels/footer2.xml.rels");
             },
+        );
+
+        it(
+            "should pack chart files",
             {
                 timeout: 99999999,
+            },
+            () => {
+                const file = new File({
+                    sections: [
+                        {
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new ChartRun({
+                                            width: 100,
+                                            height: 100,
+                                        }),
+                                        new ChartRun({
+                                            width: 100,
+                                            height: 100,
+                                        }),
+                                    ],
+                                }),
+                            ],
+                        },
+                    ],
+                });
+
+                const zipFile = compiler.compile(file);
+                const fileNames = Object.keys(zipFile.files).map((f) => zipFile.files[f].name);
+
+                expect(fileNames).to.include("word/charts/chart1.xml");
+                expect(fileNames).to.include("word/charts/chart2.xml");
             },
         );
 
         it(
             "should pack subfile overrides",
+            {
+                timeout: 99999999,
+            },
             async () => {
                 const file = new File({
                     sections: [],
@@ -141,9 +180,6 @@ describe("Compiler", () => {
 
                 expect(commentsText).toBe(subfileData1);
                 expect(commentsExtendedText).toBe(subfileData2);
-            },
-            {
-                timeout: 99999999,
             },
         );
 
@@ -210,7 +246,7 @@ describe("Compiler", () => {
                 ],
             });
 
-            vi.spyOn(compiler["imageReplacer"], "getMediaData").mockReturnValue([
+            vi.spyOn(compiler["identifierManager"], "filter").mockReturnValue([
                 {
                     type: "png",
                     data: Buffer.from(""),

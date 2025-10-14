@@ -1,24 +1,24 @@
 import JSZip from "jszip";
 import { Element, js2xml } from "xml-js";
 
-import { ImageReplacer } from "@export/packer/image-replacer";
+import { IdentifierManager } from "@export/packer/identifier-manager";
 import { DocumentAttributeNamespaces } from "@file/document";
 import { IViewWrapper } from "@file/document-wrapper";
 import { File } from "@file/file";
 import { FileChild } from "@file/file-child";
-import { IMediaData, Media } from "@file/media";
+import { Media } from "@file/media";
 import { ConcreteHyperlink, ExternalHyperlink, ParagraphChild } from "@file/paragraph";
-import { TargetModeType } from "@file/relationships/relationship/relationship";
+import { RelationshipType, TargetModeType } from "@file/relationships/relationship/relationship";
 import { IContext } from "@file/xml-components";
 import { uniqueId } from "@util/convenience-functions";
 import { OutputByType, OutputType } from "@util/output-type";
 
+import { Charts } from "@file/chart/charts";
 import { appendContentType } from "./content-types-manager";
 import { appendRelationship, getNextRelationshipIndex } from "./relationship-manager";
 import { replacer } from "./replacer";
 import { toJson } from "./util";
 
-// eslint-disable-next-line functional/prefer-readonly-type
 export type InputDataType = Buffer | string | number[] | Uint8Array | ArrayBuffer | Blob | NodeJS.ReadableStream | JSZip;
 
 export const PatchType = {
@@ -36,9 +36,14 @@ type FilePatch = {
     readonly children: readonly FileChild[];
 };
 
-type IImageRelationshipAddition = {
+type RelationshipAddition = {
     readonly key: string;
-    readonly mediaDatas: readonly IMediaData[];
+    readonly entries: readonly {
+        readonly name: string;
+        readonly path: string;
+        readonly type: RelationshipType;
+        readonly repl: string;
+    }[];
 };
 
 type IHyperlinkRelationshipAddition = {
@@ -62,7 +67,7 @@ export type PatchDocumentOptions<T extends PatchDocumentOutputType = PatchDocume
     readonly recursive?: boolean;
 };
 
-const imageReplacer = new ImageReplacer();
+const identifierManager = new IdentifierManager();
 const UTF16LE = new Uint8Array([0xff, 0xfe]);
 const UTF16BE = new Uint8Array([0xfe, 0xff]);
 
@@ -93,15 +98,15 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
     const contexts = new Map<string, IContext>();
     const file = {
         Media: new Media(),
+        Charts: new Charts(),
     } as unknown as File;
 
     const map = new Map<string, Element>();
 
-    // eslint-disable-next-line functional/prefer-readonly-type
-    const imageRelationshipAdditions: IImageRelationshipAddition[] = [];
-    // eslint-disable-next-line functional/prefer-readonly-type
+    const relationshipAdditions: RelationshipAddition[] = [];
     const hyperlinkRelationshipAdditions: IHyperlinkRelationshipAddition[] = [];
     let hasMedia = false;
+    let chartCount = 0;
 
     const binaryContentMap = new Map<string, Uint8Array>();
 
@@ -127,10 +132,8 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                 // check only those that may be used by our element types.
 
                 for (const ns of ["mc", "wp", "r", "w15", "m"] as const) {
-                    // eslint-disable-next-line functional/immutable-data
                     document.attributes[`xmlns:${ns}`] = DocumentAttributeNamespaces[ns];
                 }
-                // eslint-disable-next-line functional/immutable-data
                 document.attributes["mc:Ignorable"] = `${document.attributes["mc:Ignorable"] || ""} w15`.trim();
             }
         }
@@ -146,7 +149,6 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                             target: string,
                             __: (typeof TargetModeType)[keyof typeof TargetModeType],
                         ) => {
-                            // eslint-disable-next-line functional/immutable-data
                             hyperlinkRelationshipAdditions.push({
                                 key,
                                 hyperlink: {
@@ -184,7 +186,6 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                                 // We need to replace external hyperlinks with concrete hyperlinks
                                 if (element instanceof ExternalHyperlink) {
                                     const concreteHyperlink = new ConcreteHyperlink(element.options.children, uniqueId());
-                                    // eslint-disable-next-line functional/immutable-data
                                     hyperlinkRelationshipAdditions.push({
                                         key,
                                         hyperlink: {
@@ -210,13 +211,30 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                 }
             }
 
-            const mediaDatas = imageReplacer.getMediaData(JSON.stringify(json), context.file.Media);
+            const mediaDatas = identifierManager.filter(JSON.stringify(json), context.file.Media.Array, (item) => item.fileName);
             if (mediaDatas.length > 0) {
                 hasMedia = true;
-                // eslint-disable-next-line functional/immutable-data
-                imageRelationshipAdditions.push({
+                relationshipAdditions.push({
                     key,
-                    mediaDatas,
+                    entries: mediaDatas.map((item) => ({
+                        name: item.fileName,
+                        path: "media",
+                        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
+                        repl: item.fileName,
+                    })),
+                });
+            }
+            const chartEntries = identifierManager.filter(JSON.stringify(json), context.file.Charts.Entries, (item) => item[0]);
+            chartCount = chartEntries.length;
+            if (chartCount > 0) {
+                relationshipAdditions.push({
+                    key,
+                    entries: chartEntries.map((item, index) => ({
+                        name: `chart${index + 1}`,
+                        path: "charts",
+                        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart",
+                        repl: item[0],
+                    })),
                 });
             }
         }
@@ -224,29 +242,26 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
         map.set(key, json);
     }
 
-    for (const { key, mediaDatas } of imageRelationshipAdditions) {
-        // eslint-disable-next-line functional/immutable-data
+    for (const { key, entries } of relationshipAdditions) {
         const relationshipKey = `word/_rels/${key.split("/").pop()}.rels`;
         const relationshipsJson = map.get(relationshipKey) ?? createRelationshipFile();
         map.set(relationshipKey, relationshipsJson);
 
         const index = getNextRelationshipIndex(relationshipsJson);
-        const newJson = imageReplacer.replace(JSON.stringify(map.get(key)), mediaDatas, index);
+        const newJson = identifierManager.replace(
+            JSON.stringify(map.get(key)),
+            entries.map((item) => item.repl),
+            index,
+        );
         map.set(key, JSON.parse(newJson) as Element);
 
-        for (let i = 0; i < mediaDatas.length; i++) {
-            const { fileName } = mediaDatas[i];
-            appendRelationship(
-                relationshipsJson,
-                index + i,
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
-                `media/${fileName}`,
-            );
+        for (let i = 0; i < entries.length; i++) {
+            const { name, path, type } = entries[i];
+            appendRelationship(relationshipsJson, index + i, type, `${path}/${name}`);
         }
     }
 
     for (const { key, hyperlink } of hyperlinkRelationshipAdditions) {
-        // eslint-disable-next-line functional/immutable-data
         const relationshipKey = `word/_rels/${key.split("/").pop()}.rels`;
 
         const relationshipsJson = map.get(relationshipKey) ?? createRelationshipFile();
@@ -274,6 +289,22 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
         appendContentType(contentTypesJson, "image/bmp", "bmp");
         appendContentType(contentTypesJson, "image/gif", "gif");
         appendContentType(contentTypesJson, "image/svg+xml", "svg");
+    }
+
+    if (chartCount > 0) {
+        const contentTypesJson = map.get("[Content_Types].xml");
+
+        if (!contentTypesJson) {
+            throw new Error("Could not find content types file");
+        }
+        for (let index = 0; index < chartCount; index++) {
+            appendContentType(
+                contentTypesJson,
+                "application/vnd.openxmlformats-officedocument.drawingml.chart+xml",
+                `/word/charts/chart${index + 1}.xml`,
+                "Override",
+            );
+        }
     }
 
     const zip = new JSZip();

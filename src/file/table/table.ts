@@ -40,7 +40,6 @@ export class Table extends FileChild {
     public constructor({
         rows,
         width,
-        // eslint-disable-next-line functional/immutable-data
         columnWidths = Array<number>(Math.max(...rows.map((row) => row.CellCount))).fill(100),
         margins,
         indent,

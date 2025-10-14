@@ -5,12 +5,11 @@ import { IXmlableObject } from "./xmlable-object";
 export type IContext = {
     readonly file: File;
     readonly viewWrapper: IViewWrapper;
-    // eslint-disable-next-line functional/prefer-readonly-type
     readonly stack: IXmlableObject[];
 };
 
 export abstract class BaseXmlComponent {
-    protected readonly rootKey: string;
+    protected rootKey: string;
 
     public constructor(rootKey: string) {
         this.rootKey = rootKey;

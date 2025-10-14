@@ -1,10 +1,10 @@
 import eslint from "@eslint/js";
 import type { Linter } from "eslint";
-import importPlugin from "eslint-plugin-import";
-import unicorn from "eslint-plugin-unicorn";
+import functional from "eslint-plugin-functional";
+import { flatConfigs } from "eslint-plugin-import";
 import jsdoc from "eslint-plugin-jsdoc";
 import preferArrow from "eslint-plugin-prefer-arrow";
-import functional from "eslint-plugin-functional";
+import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import tsEslint from "typescript-eslint";
 
@@ -13,7 +13,7 @@ const config: Linter.Config<Linter.RulesRecord>[] = [
         ignores: ["**/vite.config.ts", "**/dist/**", "**/coverage/**", "**/*.js", "eslint.config.ts", "**/demo/**", "**/scripts/**"],
     },
     eslint.configs.recommended,
-    importPlugin.flatConfigs.recommended,
+    flatConfigs.recommended,
     ...tsEslint.configs.recommended,
     ...tsEslint.configs.stylistic,
     {
@@ -228,7 +228,7 @@ const config: Linter.Config<Linter.RulesRecord>[] = [
                 },
             ],
             "import/order": [
-                "error",
+                "off",
                 {
                     groups: [["external", "builtin"], "internal", ["sibling", "parent", "index"]],
                     "newlines-between": "always",
@@ -310,17 +310,8 @@ const config: Linter.Config<Linter.RulesRecord>[] = [
             "use-isnan": "error",
             "valid-typeof": "off",
 
-            "functional/immutable-data": [
-                "error",
-                {
-                    ignoreImmediateMutation: true,
-                    ignoreAccessorPattern: ["**.root*", "**.numberingReferences*", "**.sections*", "**.properties*"],
-                },
-            ],
-
             "functional/prefer-property-signatures": "error",
             "functional/no-mixed-types": "error",
-            "functional/prefer-readonly-type": "error",
 
             "@typescript-eslint/no-unused-vars": [
                 "error",

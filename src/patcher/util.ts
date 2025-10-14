@@ -11,7 +11,6 @@ export const toJson = (xmlData: string): Element => {
     return xmlObj;
 };
 
-// eslint-disable-next-line functional/prefer-readonly-type
 export const createTextElementContents = (text: string): Element[] => {
     const textJson = toJson(xml(formatter.format(new Text({ text }))));
 
@@ -25,6 +24,5 @@ export const patchSpaceAttribute = (element: Element): Element => ({
     },
 });
 
-// eslint-disable-next-line functional/prefer-readonly-type
 export const getFirstLevelElements = (relationships: Element, id: string): Element[] =>
     relationships.elements?.filter((e) => e.name === id)[0].elements ?? [];

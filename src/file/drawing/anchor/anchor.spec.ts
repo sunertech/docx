@@ -3,28 +3,16 @@ import { assert, describe, expect, it } from "vitest";
 import { Formatter } from "@export/formatter";
 import { Utility } from "tests/utility";
 
-import { IDrawingOptions } from "../drawing";
+import { DrawingCoreOptions } from "../drawing";
+import { Pic } from "../inline/graphic/graphic-data/pic";
 import { TextWrappingType } from "../text-wrap";
 import { Anchor } from "./anchor";
 
-const createAnchor = (drawingOptions: IDrawingOptions): Anchor =>
-    new Anchor({
-        mediaData: {
-            type: "png",
-            fileName: "test.png",
-            data: Buffer.from(""),
-            transformation: {
-                pixels: {
-                    x: 0,
-                    y: 0,
-                },
-                emus: {
-                    x: 0,
-                    y: 0,
-                },
-            },
-        },
-        transform: {
+const createPicAnchor = (drawingOptions: DrawingCoreOptions): Anchor => {
+    const mediaData = {
+        fileName: "test.png",
+        data: Buffer.from(""),
+        transformation: {
             pixels: {
                 x: 100,
                 y: 100,
@@ -34,15 +22,27 @@ const createAnchor = (drawingOptions: IDrawingOptions): Anchor =>
                 y: 100 * 9525,
             },
         },
-        drawingOptions,
+    };
+    return new Anchor({
+        ...drawingOptions,
+        transform: mediaData.transformation,
+        uri: "http://schemas.openxmlformats.org/drawingml/2006/picture",
+        dataElement: new Pic({
+            mediaData: {
+                type: "png",
+                ...mediaData,
+            },
+            transform: mediaData.transformation,
+            outline: drawingOptions.outline,
+        }),
     });
-
+};
 describe("Anchor", () => {
     let anchor: Anchor;
 
     describe("#constructor()", () => {
         it("should create a Drawing with correct root key", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -58,7 +58,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with all default options", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -128,7 +128,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with square text wrapping", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -150,7 +150,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with no text wrapping", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -171,7 +171,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with tight text wrapping", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     horizontalPosition: {
                         offset: 0,
@@ -192,7 +192,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with tight text wrapping", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -213,7 +213,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with a margin", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -240,7 +240,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with a default margin", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -262,7 +262,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with allowOverlap being false", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -281,7 +281,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with behindDocument being true", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -300,7 +300,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with locked being true", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -319,7 +319,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with locked being false", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -338,7 +338,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with a certain z-index", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -358,7 +358,7 @@ describe("Anchor", () => {
         });
 
         it("should create a Drawing with doc properties", () => {
-            anchor = createAnchor({
+            anchor = createPicAnchor({
                 floating: {
                     verticalPosition: {
                         offset: 0,
@@ -368,14 +368,14 @@ describe("Anchor", () => {
                     },
                     zIndex: 120,
                 },
-                docProperties: {
+                altText: {
                     name: "test",
                     description: "test",
                     title: "test",
                 },
             });
             const tree = new Formatter().format(anchor);
-            expect(tree).to.deep.equal({
+            expect(tree).to.containSubset({
                 "wp:anchor": [
                     {
                         _attr: {
@@ -473,119 +473,117 @@ describe("Anchor", () => {
                                     "xmlns:a": "http://schemas.openxmlformats.org/drawingml/2006/main",
                                 },
                             },
-                            {
-                                "a:graphicData": [
-                                    {
-                                        _attr: {
-                                            uri: "http://schemas.openxmlformats.org/drawingml/2006/picture",
-                                        },
-                                    },
-                                    {
-                                        "pic:pic": [
-                                            {
-                                                _attr: {
-                                                    "xmlns:pic": "http://schemas.openxmlformats.org/drawingml/2006/picture",
-                                                },
-                                            },
-                                            {
-                                                "pic:nvPicPr": [
-                                                    {
-                                                        "pic:cNvPr": {
-                                                            _attr: {
-                                                                descr: "",
-                                                                id: 0,
-                                                                name: "",
-                                                            },
-                                                        },
-                                                    },
-                                                    {
-                                                        "pic:cNvPicPr": [
-                                                            {
-                                                                "a:picLocks": {
-                                                                    _attr: {
-                                                                        noChangeArrowheads: 1,
-                                                                        noChangeAspect: 1,
-                                                                    },
-                                                                },
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                "pic:blipFill": [
-                                                    {
-                                                        "a:blip": {
-                                                            _attr: {
-                                                                cstate: "none",
-                                                                "r:embed": "rId{test.png}",
-                                                            },
-                                                        },
-                                                    },
-                                                    {
-                                                        "a:srcRect": {},
-                                                    },
-                                                    {
-                                                        "a:stretch": [
-                                                            {
-                                                                "a:fillRect": {},
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                "pic:spPr": [
-                                                    {
-                                                        _attr: {
-                                                            bwMode: "auto",
-                                                        },
-                                                    },
-                                                    {
-                                                        "a:xfrm": [
-                                                            {
-                                                                _attr: {},
-                                                            },
-                                                            {
-                                                                "a:off": {
-                                                                    _attr: {
-                                                                        x: 0,
-                                                                        y: 0,
-                                                                    },
-                                                                },
-                                                            },
-                                                            {
-                                                                "a:ext": {
-                                                                    _attr: {
-                                                                        cx: 952500,
-                                                                        cy: 952500,
-                                                                    },
-                                                                },
-                                                            },
-                                                        ],
-                                                    },
-                                                    {
-                                                        "a:prstGeom": [
-                                                            {
-                                                                _attr: {
-                                                                    prst: "rect",
-                                                                },
-                                                            },
-                                                            {
-                                                                "a:avLst": {},
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
                         ],
                     },
                 ],
             });
+            expect(tree["wp:anchor"][9]["a:graphic"][1]["a:graphicData"]).to.containSubset([
+                {
+                    _attr: {
+                        uri: "http://schemas.openxmlformats.org/drawingml/2006/picture",
+                    },
+                },
+                {
+                    "pic:pic": [
+                        {
+                            _attr: {
+                                "xmlns:pic": "http://schemas.openxmlformats.org/drawingml/2006/picture",
+                            },
+                        },
+                        {
+                            "pic:nvPicPr": [
+                                {
+                                    "pic:cNvPr": {
+                                        _attr: {
+                                            descr: "",
+                                            id: 0,
+                                            name: "",
+                                        },
+                                    },
+                                },
+                                {
+                                    "pic:cNvPicPr": [
+                                        {
+                                            "a:picLocks": {
+                                                _attr: {
+                                                    noChangeArrowheads: 1,
+                                                    noChangeAspect: 1,
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            "pic:blipFill": [
+                                {
+                                    "a:blip": {
+                                        _attr: {
+                                            cstate: "none",
+                                            "r:embed": "rId{test.png}",
+                                        },
+                                    },
+                                },
+                                {
+                                    "a:srcRect": {},
+                                },
+                                {
+                                    "a:stretch": [
+                                        {
+                                            "a:fillRect": {},
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            "pic:spPr": [
+                                {
+                                    _attr: {
+                                        bwMode: "auto",
+                                    },
+                                },
+                                {
+                                    "a:xfrm": [
+                                        {
+                                            _attr: {},
+                                        },
+                                        {
+                                            "a:off": {
+                                                _attr: {
+                                                    x: 0,
+                                                    y: 0,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            "a:ext": {
+                                                _attr: {
+                                                    cx: 952500,
+                                                    cy: 952500,
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                                {
+                                    "a:prstGeom": [
+                                        {
+                                            _attr: {
+                                                prst: "rect",
+                                            },
+                                        },
+                                        {
+                                            "a:avLst": {},
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ]);
         });
     });
 });

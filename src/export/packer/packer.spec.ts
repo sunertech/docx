@@ -104,14 +104,14 @@ describe("Packer", () => {
     describe("#toBuffer()", () => {
         it(
             "should create a standard docx file",
+            {
+                timeout: 99999999,
+            },
             async () => {
                 const buffer = await Packer.toBuffer(file);
 
                 assert.isDefined(buffer);
                 assert.isTrue(buffer.byteLength > 0);
-            },
-            {
-                timeout: 99999999,
             },
         );
 
@@ -134,13 +134,13 @@ describe("Packer", () => {
     describe("#toBase64String()", () => {
         it(
             "should create a standard docx file",
+            {
+                timeout: 99999999,
+            },
             async () => {
                 const str = await Packer.toBase64String(file);
                 expect(str).toBeDefined();
                 expect(str.length).toBeGreaterThan(0);
-            },
-            {
-                timeout: 99999999,
             },
         );
 

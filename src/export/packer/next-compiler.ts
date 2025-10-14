@@ -5,7 +5,7 @@ import { File } from "@file/file";
 import { obfuscate } from "@file/fonts/obfuscate-ttf-to-odttf";
 
 import { Formatter } from "../formatter";
-import { ImageReplacer } from "./image-replacer";
+import { IdentifierManager } from "./identifier-manager";
 import { NumberingReplacer } from "./numbering-replacer";
 import { PrettifyType } from "./packer";
 
@@ -20,6 +20,7 @@ type IXmlifyedFileMapping = {
     readonly Properties: IXmlifyedFile;
     readonly Numbering: IXmlifyedFile;
     readonly Relationships: IXmlifyedFile;
+    readonly Charts: readonly IXmlifyedFile[];
     readonly FileRelationships: IXmlifyedFile;
     readonly Headers: readonly IXmlifyedFile[];
     readonly Footers: readonly IXmlifyedFile[];
@@ -39,12 +40,12 @@ type IXmlifyedFileMapping = {
 
 export class Compiler {
     private readonly formatter: Formatter;
-    private readonly imageReplacer: ImageReplacer;
+    private readonly identifierManager: IdentifierManager;
     private readonly numberingReplacer: NumberingReplacer;
 
     public constructor() {
         this.formatter = new Formatter();
-        this.imageReplacer = new ImageReplacer();
+        this.identifierManager = new IdentifierManager();
         this.numberingReplacer = new NumberingReplacer();
     }
 
@@ -125,8 +126,8 @@ export class Compiler {
             },
         );
 
-        const documentMediaDatas = this.imageReplacer.getMediaData(documentXmlData, file.Media);
-        const commentMediaDatas = this.imageReplacer.getMediaData(commentXmlData, file.Media);
+        const documentMediaDatas = this.identifierManager.filter(documentXmlData, file.Media.Array, (item) => item.fileName);
+        const commentMediaDatas = this.identifierManager.filter(commentXmlData, file.Media.Array, (item) => item.fileName);
 
         return {
             Relationships: {
@@ -136,6 +137,14 @@ export class Compiler {
                             documentRelationshipCount + i,
                             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
                             `media/${mediaData.fileName}`,
+                        );
+                    });
+
+                    file.Charts.Entries.forEach((_, index) => {
+                        file.Document.Relationships.createRelationship(
+                            file.Document.Relationships.RelationshipCount + 1,
+                            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart",
+                            `charts/chart${index + 1}.xml`,
                         );
                     });
 
@@ -163,12 +172,32 @@ export class Compiler {
             },
             Document: {
                 data: (() => {
-                    const xmlData = this.imageReplacer.replace(documentXmlData, documentMediaDatas, documentRelationshipCount);
-                    const referenedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
-                    return referenedXmlData;
+                    const xmlData = this.identifierManager.replace(
+                        documentXmlData,
+                        [...documentMediaDatas.map((item) => item.fileName), ...file.Charts.Entries.map(([key]) => key)],
+                        documentRelationshipCount,
+                    );
+                    const referencedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
+                    return referencedXmlData;
                 })(),
                 path: "word/document.xml",
             },
+            Charts: file.Charts.Entries.map(([_, chart], index) => ({
+                data: xml(
+                    this.formatter.format(chart, {
+                        viewWrapper: file.Document,
+                        file,
+                        stack: [],
+                    }),
+                    {
+                        indent: prettify,
+                        declaration: {
+                            encoding: "UTF-8",
+                        },
+                    },
+                ),
+                path: `word/charts/chart${index + 1}.xml`,
+            })),
             Styles: {
                 data: (() => {
                     const xmlStyles = xml(
@@ -254,7 +283,7 @@ export class Compiler {
                         },
                     },
                 );
-                const mediaDatas = this.imageReplacer.getMediaData(xmlData, file.Media);
+                const mediaDatas = this.identifierManager.filter(xmlData, file.Media.Array, (item) => item.fileName);
 
                 mediaDatas.forEach((mediaData, i) => {
                     headerWrapper.Relationships.createRelationship(
@@ -295,7 +324,7 @@ export class Compiler {
                         },
                     },
                 );
-                const mediaDatas = this.imageReplacer.getMediaData(xmlData, file.Media);
+                const mediaDatas = this.identifierManager.filter(xmlData, file.Media.Array, (item) => item.fileName);
 
                 mediaDatas.forEach((mediaData, i) => {
                     footerWrapper.Relationships.createRelationship(
@@ -336,14 +365,18 @@ export class Compiler {
                         },
                     },
                 );
-                const mediaDatas = this.imageReplacer.getMediaData(tempXmlData, file.Media);
+                const mediaDatas = this.identifierManager.filter(tempXmlData, file.Media.Array, (item) => item.fileName);
                 // TODO: 0 needs to be changed when headers get relationships of their own
-                const xmlData = this.imageReplacer.replace(tempXmlData, mediaDatas, 0);
+                const xmlData = this.identifierManager.replace(
+                    tempXmlData,
+                    mediaDatas.map((item) => item.fileName),
+                    0,
+                );
 
-                const referenedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
+                const referencedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
 
                 return {
-                    data: referenedXmlData,
+                    data: referencedXmlData,
                     path: `word/header${index + 1}.xml`,
                 };
             }),
@@ -361,14 +394,18 @@ export class Compiler {
                         },
                     },
                 );
-                const mediaDatas = this.imageReplacer.getMediaData(tempXmlData, file.Media);
+                const mediaDatas = this.identifierManager.filter(tempXmlData, file.Media.Array, (item) => item.fileName);
                 // TODO: 0 needs to be changed when headers get relationships of their own
-                const xmlData = this.imageReplacer.replace(tempXmlData, mediaDatas, 0);
+                const xmlData = this.identifierManager.replace(
+                    tempXmlData,
+                    mediaDatas.map((item) => item.fileName),
+                    0,
+                );
 
-                const referenedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
+                const referencedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
 
                 return {
-                    data: referenedXmlData,
+                    data: referencedXmlData,
                     path: `word/footer${index + 1}.xml`,
                 };
             }),
@@ -473,9 +510,13 @@ export class Compiler {
             },
             Comments: {
                 data: (() => {
-                    const xmlData = this.imageReplacer.replace(commentXmlData, commentMediaDatas, commentRelationshipCount);
-                    const referenedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
-                    return referenedXmlData;
+                    const xmlData = this.identifierManager.replace(
+                        commentXmlData,
+                        commentMediaDatas.map((item) => item.fileName),
+                        commentRelationshipCount,
+                    );
+                    const referencedXmlData = this.numberingReplacer.replace(xmlData, file.Numbering.ConcreteNumbering);
+                    return referencedXmlData;
                 })(),
                 path: "word/comments.xml",
             },

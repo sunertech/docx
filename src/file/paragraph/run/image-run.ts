@@ -1,18 +1,14 @@
-import { DocPropertiesOptions } from "@file/drawing/doc-properties/doc-properties";
 import { IContext, IXmlableObject } from "@file/xml-components";
 import { hashedId } from "@util/convenience-functions";
 
-import { Drawing, IFloating } from "../../drawing";
-import { OutlineOptions } from "../../drawing/inline/graphic/graphic-data/pic/shape-properties/outline/outline";
-import { IMediaTransformation } from "../../media";
+import { Pic } from "@file/drawing/inline/graphic/graphic-data/pic";
+import { IMediaTransformation } from "@file/media";
+import { Drawing, DrawingCoreOptions } from "../../drawing";
 import { IMediaData } from "../../media/data";
 import { Run } from "../run";
 
 type CoreImageOptions = {
     readonly transformation: IMediaTransformation;
-    readonly floating?: IFloating;
-    readonly altText?: DocPropertiesOptions;
-    readonly outline?: OutlineOptions;
 };
 
 type RegularImageOptions = {
@@ -29,7 +25,7 @@ type SvgMediaOptions = {
     readonly fallback: RegularImageOptions;
 };
 
-export type IImageOptions = (RegularImageOptions | SvgMediaOptions) & CoreImageOptions;
+export type IImageOptions = (RegularImageOptions | SvgMediaOptions) & DrawingCoreOptions & CoreImageOptions;
 
 const convertDataURIToBinary = (dataURI: string): Uint8Array => {
     if (typeof atob === "function") {
@@ -57,7 +53,7 @@ const convertDataURIToBinary = (dataURI: string): Uint8Array => {
 const standardizeData = (data: string | Buffer | Uint8Array | ArrayBuffer): Buffer | Uint8Array | ArrayBuffer =>
     typeof data === "string" ? convertDataURIToBinary(data) : data;
 
-const createImageData = (options: IImageOptions, key: string): Pick<IMediaData, "data" | "fileName" | "transformation"> => ({
+export const createImageData = (options: IImageOptions, key: string): Pick<IMediaData, "data" | "fileName" | "transformation"> => ({
     data: standardizeData(options.data),
     fileName: key,
     transformation: {
@@ -103,11 +99,10 @@ export class ImageRun extends Run {
                       type: options.type,
                       ...createImageData(options, key),
                   };
-        const drawing = new Drawing(this.imageData, {
-            floating: options.floating,
-            docProperties: options.altText,
-            outline: options.outline,
-        });
+
+        const uri = "http://schemas.openxmlformats.org/drawingml/2006/picture";
+        const dataElement = new Pic({ mediaData: this.imageData, transform: this.imageData.transformation, outline: options.outline });
+        const drawing = new Drawing({ dataElement, uri, transform: this.imageData.transformation, ...options });
 
         this.root.push(drawing);
     }

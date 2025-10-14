@@ -1,9 +1,9 @@
+import { copyFileSync } from "node:fs";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { configDefaults, defineConfig } from "vitest/config";
-import { copyFileSync } from "node:fs";
 
 export default defineConfig({
     plugins: [

@@ -1,20 +1,20 @@
 // http://officeopenxml.com/drwPicInline.php
-import { IMediaData, IMediaDataTransformation } from "@file/media";
 import { BuilderElement, XmlComponent } from "@file/xml-components";
 
+import { GraphicWrapperOptions } from "../anchor";
 import { DocProperties, DocPropertiesOptions } from "./../doc-properties/doc-properties";
 import { createEffectExtent } from "./../effect-extent/effect-extent";
 import { createExtent } from "./../extent/extent";
 import { createGraphicFrameProperties } from "./../graphic-frame/graphic-frame-properties";
-import { Graphic } from "./../inline/graphic";
-import { OutlineOptions } from "./graphic/graphic-data/pic/shape-properties/outline/outline";
+import { Graphic, GraphicOptions } from "./../inline/graphic";
+import { OutlineOptions } from "./graphic/shape-properties/outline/outline";
 
-type InlineOptions = {
-    readonly mediaData: IMediaData;
-    readonly transform: IMediaDataTransformation;
-    readonly docProperties?: DocPropertiesOptions;
+export type InlineCoreOptions = {
     readonly outline?: OutlineOptions;
+    readonly altText?: DocPropertiesOptions;
 };
+
+type InlineOptions = InlineCoreOptions & GraphicOptions & GraphicWrapperOptions;
 
 // <xsd:complexType name="CT_Inline">
 //     <xsd:sequence>
@@ -30,7 +30,7 @@ type InlineOptions = {
 //     <xsd:attribute name="distL" type="ST_WrapDistance" use="optional"/>
 //     <xsd:attribute name="distR" type="ST_WrapDistance" use="optional"/>
 // </xsd:complexType>
-export const createInline = ({ mediaData, transform, docProperties, outline }: InlineOptions): XmlComponent =>
+export const createInline = ({ dataElement, uri, transform, altText, outline }: InlineOptions): XmlComponent =>
     new BuilderElement({
         name: "wp:inline",
         attributes: {
@@ -63,8 +63,8 @@ export const createInline = ({ mediaData, transform, docProperties, outline }: I
                       }
                     : { top: 0, right: 0, bottom: 0, left: 0 },
             ),
-            new DocProperties(docProperties),
+            new DocProperties(altText),
             createGraphicFrameProperties(),
-            new Graphic({ mediaData, transform, outline }),
+            new Graphic({ dataElement, uri }),
         ],
     });

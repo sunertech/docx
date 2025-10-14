@@ -1,9 +1,10 @@
 import { AppProperties } from "./app-properties/app-properties";
+import { Charts } from "./chart/charts";
 import { ContentTypes } from "./content-types/content-types";
 import { CoreProperties, IPropertiesOptions } from "./core-properties";
 import { CustomProperties } from "./custom-properties";
-import { HeaderFooterReferenceType, ISectionPropertiesOptions } from "./document/body/section-properties";
 import { DocumentWrapper } from "./document-wrapper";
+import { HeaderFooterReferenceType, ISectionPropertiesOptions } from "./document/body/section-properties";
 import { FileChild } from "./file-child";
 import { FontWrapper } from "./fonts/font-wrapper";
 import { FooterWrapper, IDocumentFooter } from "./footer-wrapper";
@@ -35,17 +36,15 @@ export type ISectionOptions = {
 };
 
 export class File {
-    // eslint-disable-next-line functional/prefer-readonly-type
     private currentRelationshipId: number = 1;
 
     private readonly documentWrapper: DocumentWrapper;
-    // eslint-disable-next-line functional/prefer-readonly-type
     private readonly headers: IDocumentHeader[] = [];
-    // eslint-disable-next-line functional/prefer-readonly-type
     private readonly footers: IDocumentFooter[] = [];
     private readonly coreProperties: CoreProperties;
     private readonly numbering: Numbering;
     private readonly media: Media;
+    private readonly charts: Charts;
     private readonly fileRelationships: Relationships;
     private readonly footnotesWrapper: FootnotesWrapper;
     private readonly settings: Settings;
@@ -89,6 +88,7 @@ export class File {
         });
 
         this.media = new Media();
+        this.charts = new Charts();
 
         if (options.externalStyles !== undefined) {
             const stylesFactory = new ExternalStylesFactory();
@@ -142,7 +142,6 @@ export class File {
     }
 
     private createHeader(header: Header): HeaderWrapper {
-        // eslint-disable-next-line functional/immutable-data
         const wrapper = new HeaderWrapper(this.media, this.currentRelationshipId++);
 
         for (const child of header.options.children) {
@@ -154,7 +153,6 @@ export class File {
     }
 
     private createFooter(footer: Footer): FooterWrapper {
-        // eslint-disable-next-line functional/immutable-data
         const wrapper = new FooterWrapper(this.media, this.currentRelationshipId++);
 
         for (const child of footer.options.children) {
@@ -169,7 +167,6 @@ export class File {
         header: HeaderWrapper,
         type: (typeof HeaderFooterReferenceType)[keyof typeof HeaderFooterReferenceType] = HeaderFooterReferenceType.DEFAULT,
     ): void {
-        // eslint-disable-next-line functional/immutable-data
         this.headers.push({ header, type });
         this.documentWrapper.Relationships.createRelationship(
             header.View.ReferenceId,
@@ -183,7 +180,6 @@ export class File {
         footer: FooterWrapper,
         type: (typeof HeaderFooterReferenceType)[keyof typeof HeaderFooterReferenceType] = HeaderFooterReferenceType.DEFAULT,
     ): void {
-        // eslint-disable-next-line functional/immutable-data
         this.footers.push({ footer, type });
         this.documentWrapper.Relationships.createRelationship(
             footer.View.ReferenceId,
@@ -216,31 +212,26 @@ export class File {
         );
 
         this.documentWrapper.Relationships.createRelationship(
-            // eslint-disable-next-line functional/immutable-data
             this.currentRelationshipId++,
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
             "styles.xml",
         );
         this.documentWrapper.Relationships.createRelationship(
-            // eslint-disable-next-line functional/immutable-data
             this.currentRelationshipId++,
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering",
             "numbering.xml",
         );
         this.documentWrapper.Relationships.createRelationship(
-            // eslint-disable-next-line functional/immutable-data
             this.currentRelationshipId++,
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes",
             "footnotes.xml",
         );
         this.documentWrapper.Relationships.createRelationship(
-            // eslint-disable-next-line functional/immutable-data
             this.currentRelationshipId++,
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings",
             "settings.xml",
         );
         this.documentWrapper.Relationships.createRelationship(
-            // eslint-disable-next-line functional/immutable-data
             this.currentRelationshipId++,
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
             "comments.xml",
@@ -265,6 +256,10 @@ export class File {
 
     public get Media(): Media {
         return this.media;
+    }
+
+    public get Charts(): Charts {
+        return this.charts;
     }
 
     public get FileRelationships(): Relationships {

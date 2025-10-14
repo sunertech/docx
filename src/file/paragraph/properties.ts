@@ -77,7 +77,6 @@ export type IParagraphPropertiesOptions = {
 } & IParagraphStylePropertiesOptions;
 
 export class ParagraphProperties extends IgnoreIfEmptyXmlComponent {
-    // eslint-disable-next-line functional/prefer-readonly-type
     private readonly numberingReferences: { readonly reference: string; readonly instance: number }[] = [];
 
     public constructor(options?: IParagraphPropertiesOptions) {

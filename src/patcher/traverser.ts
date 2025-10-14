@@ -18,7 +18,6 @@ const elementsToWrapper = (wrapper: ElementWrapper): readonly ElementWrapper[] =
 export const traverse = (node: Element): readonly IRenderedParagraphNode[] => {
     let renderedParagraphs: readonly IRenderedParagraphNode[] = [];
 
-    // eslint-disable-next-line functional/prefer-readonly-type
     const queue: ElementWrapper[] = [
         ...elementsToWrapper({
             element: node,
@@ -29,13 +28,11 @@ export const traverse = (node: Element): readonly IRenderedParagraphNode[] => {
 
     let currentNode: ElementWrapper | undefined;
     while (queue.length > 0) {
-        // eslint-disable-next-line functional/immutable-data
         currentNode = queue.shift()!; // This is safe because we check the length of the queue
 
         if (currentNode.element.name === "w:p") {
             renderedParagraphs = [...renderedParagraphs, renderParagraphNode(currentNode)];
         }
-        // eslint-disable-next-line functional/immutable-data
         queue.push(...elementsToWrapper(currentNode));
     }
 

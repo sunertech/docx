@@ -50,4 +50,8 @@ export class ContentTypes extends XmlComponent {
             new Override("application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml", `/word/header${index}.xml`),
         );
     }
+
+    public addChart(index: number): void {
+        this.root.push(new Override("application/vnd.openxmlformats-officedocument.drawingml.chart+xml", `/word/charts/chart${index}.xml`));
+    }
 }

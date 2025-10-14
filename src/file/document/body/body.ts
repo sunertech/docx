@@ -4,7 +4,6 @@ import { IContext, IXmlableObject, XmlComponent } from "@file/xml-components";
 import { ISectionPropertiesOptions, SectionProperties } from "./section-properties/section-properties";
 
 export class Body extends XmlComponent {
-    // eslint-disable-next-line functional/prefer-readonly-type
     private readonly sections: SectionProperties[] = [];
 
     public constructor() {

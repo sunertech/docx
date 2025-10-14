@@ -245,6 +245,9 @@ describe("ImageRun", () => {
                                                                             },
                                                                         ],
                                                                     },
+                                                                    {
+                                                                        "a:noFill": {},
+                                                                    },
                                                                 ],
                                                             },
                                                         ],
@@ -497,6 +500,9 @@ describe("ImageRun", () => {
                                                                                 "a:avLst": {},
                                                                             },
                                                                         ],
+                                                                    },
+                                                                    {
+                                                                        "a:noFill": {},
                                                                     },
                                                                 ],
                                                             },
@@ -754,6 +760,9 @@ describe("ImageRun", () => {
                                                                             },
                                                                         ],
                                                                     },
+                                                                    {
+                                                                        "a:noFill": {},
+                                                                    },
                                                                 ],
                                                             },
                                                         ],
@@ -1009,6 +1018,9 @@ describe("ImageRun", () => {
                                                                                 "a:avLst": {},
                                                                             },
                                                                         ],
+                                                                    },
+                                                                    {
+                                                                        "a:noFill": {},
                                                                     },
                                                                 ],
                                                             },

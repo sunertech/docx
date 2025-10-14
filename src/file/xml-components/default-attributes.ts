@@ -10,18 +10,25 @@ export type AttributePayload<T> = { readonly [P in keyof T]: { readonly key: str
 export abstract class XmlAttributeComponent<T extends Record<string, any>> extends BaseXmlComponent {
     protected readonly xmlKeys?: AttributeMap<T>;
 
-    public constructor(private readonly root: T) {
+    public constructor(
+        private readonly root: T,
+        private readonly namespace?: string,
+    ) {
         super("_attr");
     }
 
     public prepForXml(_: IContext): IXmlableObject {
         const attrs: Record<string, string> = {};
         Object.entries(this.root).forEach(([key, value]) => {
-            if (value !== undefined) {
-                const newKey = (this.xmlKeys && this.xmlKeys[key]) || key;
-                // eslint-disable-next-line functional/immutable-data
-                attrs[newKey] = value;
+            if (value === undefined) {
+                return;
             }
+            let newKey = (this.xmlKeys && this.xmlKeys[key]) || key;
+            let index: number;
+            if (this.namespace !== undefined && (index = newKey.indexOf(":")) >= 0) {
+                newKey = this.namespace + (this.namespace ? ":" : "") + newKey.slice(index + 1);
+            }
+            attrs[newKey] = value;
         });
         return { _attr: attrs };
     }

@@ -53,7 +53,6 @@ export const replaceTokenInParagraphElement = ({
                         const currentElement = paragraphElement.elements![run.index].elements![index];
                         // We need to add xml:space="preserve" to the last element to preserve the whitespace
                         // Otherwise, the text will be merged with the next element
-                        // eslint-disable-next-line functional/immutable-data
                         paragraphElement.elements![run.index].elements![index] = patchSpaceAttribute(currentElement);
                         replaceMode = ReplaceMode.END;
                     } else {
@@ -70,7 +69,6 @@ export const replaceTokenInParagraphElement = ({
 };
 
 const patchTextElement = (element: Element, text: string): Element => {
-    // eslint-disable-next-line functional/immutable-data
     element.elements = createTextElementContents(text);
 
     return element;
