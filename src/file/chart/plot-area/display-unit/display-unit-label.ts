@@ -23,7 +23,7 @@ export class DisplayUnitLabel extends XmlComponent {
             this.root.push(new Layout(layout));
         }
         if (textSource) {
-            this.root.push(new TextSource(textSource));
+            this.root.push(new TextSource("c:tx", textSource));
         }
         if (shape) {
             this.root.push(new ShapeProperties("c:spPr", shape));

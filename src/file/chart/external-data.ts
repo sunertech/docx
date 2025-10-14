@@ -15,9 +15,6 @@ export class ExternalData extends XmlComponent {
     public constructor({ id, autoUpdate }: IExternalDataOptions) {
         super("c:externalData");
         this.root.push(new ExternalDataAttributes({ id }));
-
-        if (autoUpdate !== undefined) {
-            this.root.push(new BooleanElement("c:autoUpdate", autoUpdate, ""));
-        }
+        this.root.push(new BooleanElement("c:autoUpdate", autoUpdate ?? false, ""));
     }
 }

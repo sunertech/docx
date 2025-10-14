@@ -11,7 +11,7 @@ export type TextRunOptions = {
 
 export class TextRun extends XmlComponent {
     public constructor({ properties, text }: TextRunOptions) {
-        super("a:p");
+        super("a:r");
         if (properties) {
             this.root.push(new TextCharacterProperties("a:rPr", properties));
         }

@@ -23,7 +23,7 @@ export class Title extends XmlComponent {
     public constructor({ layout, overlay, shape, textSource, extensionList }: TitleOptions) {
         super("c:title");
         if (textSource) {
-            this.root.push(new TextSource(textSource));
+            this.root.push(new TextSource("c:tx", textSource));
         }
         if (layout) {
             this.root.push(new Layout(layout));

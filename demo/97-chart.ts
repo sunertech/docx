@@ -10,18 +10,24 @@ const doc = new Document({
                 new Paragraph({
                     children: [
                         new ChartRun({
+                            title: "{{my_chart}}",
                             width: 530,
                             height: 380,
                             floating: {
-                                horizontalPosition: { offset: 1601532, relative: "page" },
-                                verticalPosition: { offset: 3463340, relative: "page" },
+                                horizontalPosition: { align: "center", relative: "page" },
+                                verticalPosition: { align: "center", relative: "page" },
                             },
+                            legend: { position: "t" },
                             barChart: {
+                                categories: ["April", "May", "June", "July"],
                                 series: [
                                     {
                                         name: "Region 1",
-                                        categories: ["April", "May", "June", "July"],
                                         values: [27, 36, 63, 143],
+                                    },
+                                    {
+                                        name: "Region 2",
+                                        values: [55, 43, 80, 43],
                                     },
                                 ],
                             },

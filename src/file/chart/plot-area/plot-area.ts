@@ -1,3 +1,4 @@
+import { LineCap, PresetLineDash } from "@file/drawing/inline/graphic/shape-properties/outline/outline";
 import { IShapePropertiesOptions, ShapeProperties } from "@file/drawing/inline/graphic/shape-properties/shape-properties";
 import { XmlComponent } from "@file/xml-components";
 import { AreaChart, AreaChartOptions } from "./area-chart/area-chart";
@@ -23,6 +24,7 @@ import { Surface3DChart, Surface3DChartOptions } from "./surface3d-chart/surface
 import { ValueAxis, ValueAxisOptions } from "./value-axis/value-axis";
 
 export type PlotAreaOptions = {
+    readonly categories?: string[];
     readonly layout?: LayoutOptions;
     readonly areaChart?: AreaChartOptions;
     readonly area3DChart?: Area3DChartOptions;
@@ -78,6 +80,7 @@ export type PlotAreaOptions = {
 
 export class PlotArea extends XmlComponent {
     public constructor({
+        categories,
         shape,
         layout,
         areaChart,
@@ -102,17 +105,9 @@ export class PlotArea extends XmlComponent {
         seriesAxis,
     }: PlotAreaOptions) {
         super("c:plotArea");
-        this.root.push(
-            new Layout({
-                target: "inner",
-                mode: { x: "edge", y: "edge" },
-                x: 0.0716205,
-                y: 0.0892138,
-                width: 0.92338,
-                height: 0.841895,
-                ...layout,
-            }),
-        );
+        if (layout) {
+            this.root.push(new Layout(layout));
+        }
         const categoryAxisId = 2094734552;
         const valueAxisId = 2094734553;
         const dateAxisId = 2094734554;
@@ -149,7 +144,13 @@ export class PlotArea extends XmlComponent {
             this.root.push(new DoughnutChart(doughnutChart));
         }
         if (barChart) {
-            this.root.push(new BarChart({ ...barChart, axisId: { category: categoryAxisId, value: valueAxisId } }));
+            this.root.push(
+                new BarChart({
+                    ...barChart,
+                    series: barChart.series.map((serie) => ({ categories: barChart.categories || categories, ...serie })),
+                    axisId: { category: categoryAxisId, value: valueAxisId },
+                }),
+            );
         }
         if (bar3DChart) {
             this.root.push(new Bar3DChart(bar3DChart));
@@ -183,6 +184,20 @@ export class PlotArea extends XmlComponent {
                     },
                     position: "l",
                     scaling: {},
+                    gridlines: {
+                        major: valueAxis?.gridlines?.major ?? {
+                            outline: {
+                                width: 12700,
+                                cap: LineCap.FLAT,
+                                type: "solidFill",
+                                solidFillType: "rgb",
+                                value: "B8B8B8",
+                                dash: { type: "preset", value: PresetLineDash.SOLID },
+                                join: { type: "miter", limit: 400000 },
+                            },
+                        },
+                        ...valueAxis?.gridlines,
+                    },
                     ...valueAxis,
                     id: valueAxisId,
                     ids: {

@@ -57,7 +57,7 @@ export class EmptyElement extends XmlComponent {}
 //     <xsd:attribute name="val" type="s:ST_String" use="required"/>
 // </xsd:complexType>
 export class StringValueElement extends XmlComponent {
-    public constructor(name: string, val: string, namespace?: string) {
+    public constructor(name: string, val: string | undefined, namespace?: string) {
         super(name);
         this.root.push(new Attributes({ val }, namespace));
     }

@@ -1,4 +1,5 @@
 import JSZip from "jszip";
+import * as XLSX from "xlsx";
 import xml from "xml";
 
 import { File } from "@file/file";
@@ -21,6 +22,8 @@ type IXmlifyedFileMapping = {
     readonly Numbering: IXmlifyedFile;
     readonly Relationships: IXmlifyedFile;
     readonly Charts: readonly IXmlifyedFile[];
+    readonly ChartsRelationships: readonly IXmlifyedFile[];
+    readonly ChartsEmbeddings: readonly IXmlifyedFile[];
     readonly FileRelationships: IXmlifyedFile;
     readonly Headers: readonly IXmlifyedFile[];
     readonly Footers: readonly IXmlifyedFile[];
@@ -140,11 +143,16 @@ export class Compiler {
                         );
                     });
 
-                    file.Charts.Entries.forEach((_, index) => {
+                    file.Charts.Entries.forEach(([_, chartWrapper], index) => {
                         file.Document.Relationships.createRelationship(
                             file.Document.Relationships.RelationshipCount + 1,
                             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart",
                             `charts/chart${index + 1}.xml`,
+                        );
+                        chartWrapper.Relationships.createRelationship(
+                            chartWrapper.Relationships.RelationshipCount + 1,
+                            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/package",
+                            `../embeddings/Microsoft_Excel_Sheet${index + 1}.xlsx`,
                         );
                     });
 
@@ -182,9 +190,9 @@ export class Compiler {
                 })(),
                 path: "word/document.xml",
             },
-            Charts: file.Charts.Entries.map(([_, chart], index) => ({
+            Charts: file.Charts.Entries.map(([_, chartWrapper], index) => ({
                 data: xml(
-                    this.formatter.format(chart, {
+                    this.formatter.format(chartWrapper.View, {
                         viewWrapper: file.Document,
                         file,
                         stack: [],
@@ -198,6 +206,32 @@ export class Compiler {
                 ),
                 path: `word/charts/chart${index + 1}.xml`,
             })),
+            ChartsRelationships: file.Charts.Entries.map(([_, chartWrapper], index) => ({
+                data: xml(
+                    this.formatter.format(chartWrapper.Relationships, {
+                        viewWrapper: file.Document,
+                        file,
+                        stack: [],
+                    }),
+                    {
+                        indent: prettify,
+                        declaration: {
+                            encoding: "UTF-8",
+                        },
+                    },
+                ),
+                path: `word/charts/_rels/chart${index + 1}.xml.rels`,
+            })),
+            ChartsEmbeddings: file.Charts.Entries.map(([_, chartWrapper], index) => {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(chartWrapper.View.sheetArrayTable);
+                XLSX.utils.book_append_sheet(wb, ws, `Sheet${index + 1}`);
+                const xlsxData = XLSX.writeXLSX(wb, { type: "buffer" });
+                return {
+                    data: xlsxData,
+                    path: `word/embeddings/Microsoft_Excel_Sheet${index + 1}.xlsx`,
+                };
+            }),
             Styles: {
                 data: (() => {
                     const xmlStyles = xml(

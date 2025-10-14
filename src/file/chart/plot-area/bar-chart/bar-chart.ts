@@ -13,6 +13,7 @@ type BarDirection = "bar" | "col";
 type BarGrouping = "percentStacked" | "clustered" | "standard" | "stacked";
 
 export type BarChartOptions = {
+    readonly categories?: string[];
     readonly direction?: BarDirection;
     readonly grouping?: BarGrouping;
     readonly varyColors?: boolean;
@@ -42,6 +43,7 @@ type InternalOptions = {
 
 export class BarChart extends XmlComponent {
     public constructor({
+        categories,
         direction,
         grouping,
         varyColors,
@@ -56,7 +58,7 @@ export class BarChart extends XmlComponent {
         this.root.push(new StringEnumValueElement<BarGrouping>("c:grouping", grouping || "stacked", ""));
         this.root.push(new BooleanElement("c:varyColors", varyColors ?? false, ""));
         series.forEach((item, index) => {
-            this.root.push(new BarSeries({ ...item, index }));
+            this.root.push(new BarSeries({ categories, ...item, index }));
         });
         this.root.push(
             typeof gapWidth === "string"

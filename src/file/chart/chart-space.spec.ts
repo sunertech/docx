@@ -65,7 +65,7 @@ describe("ChartSpace", () => {
                                                                 "a:pPr": {},
                                                             },
                                                             {
-                                                                "a:p": [
+                                                                "a:r": [
                                                                     {
                                                                         "a:t": ["My Chart"],
                                                                     },

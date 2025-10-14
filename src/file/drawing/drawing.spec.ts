@@ -207,9 +207,6 @@ describe("Drawing", () => {
                                                                     },
                                                                 ],
                                                             },
-                                                            {
-                                                                "a:noFill": {},
-                                                            },
                                                         ],
                                                     },
                                                 ],
@@ -438,9 +435,6 @@ describe("Drawing", () => {
                                                                         "a:avLst": {},
                                                                     },
                                                                 ],
-                                                            },
-                                                            {
-                                                                "a:noFill": {},
                                                             },
                                                         ],
                                                     },
@@ -691,9 +685,6 @@ describe("Drawing", () => {
                                                                         "a:avLst": {},
                                                                     },
                                                                 ],
-                                                            },
-                                                            {
-                                                                "a:noFill": {},
                                                             },
                                                         ],
                                                     },

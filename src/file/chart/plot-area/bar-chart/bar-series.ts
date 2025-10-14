@@ -1,12 +1,8 @@
 import { ExtensionList, ExtensionListOptions } from "@file/chart/extension-list";
-import {
-    BooleanElement,
-    BuilderElement,
-    NumberValueElement,
-    StringContainer,
-    StringEnumValueElement,
-    XmlComponent,
-} from "@file/xml-components";
+import { NumberSource } from "@file/number/number-source";
+import { TextSource } from "@file/text/text-source";
+import { BooleanElement, StringEnumValueElement, XmlComponent } from "@file/xml-components";
+import * as XLSX from "xlsx";
 import { DataLabels, DataLabelsOptions } from "../data-labels/data-labels";
 import { DataPoint, DataPointOptions } from "../data-point/data-point";
 import { ErrorBars, ErrorBarsOptions } from "../error-bars/error-bars";
@@ -84,58 +80,20 @@ export class BarSeries extends XmlComponent {
             this.root.push(new ErrorBars(errorBars));
         }
         if (categories) {
+            const column = XLSX.utils.encode_col(categories.length);
             this.root.push(
-                new BuilderElement({
-                    name: "c:cat",
-                    children: [
-                        new BuilderElement({
-                            name: "c:strRef",
-                            children: [
-                                new BuilderElement({
-                                    name: "c:strCache",
-                                    children: [
-                                        new NumberValueElement("c:ptCount", categories.length, ""),
-                                        ...categories.map(
-                                            (item, index) =>
-                                                new BuilderElement({
-                                                    name: "c:pt",
-                                                    attributes: { idx: { key: "idx", value: index } },
-                                                    children: [new StringContainer("c:v", item)],
-                                                }),
-                                        ),
-                                    ],
-                                }),
-                            ],
-                        }),
-                    ],
+                new TextSource("c:cat", {
+                    formula: `Sheet1!$B$1:$${column}$1`,
+                    values: categories,
                 }),
             );
         }
         if (values) {
+            const column = XLSX.utils.encode_col(values.length);
             this.root.push(
-                new BuilderElement({
-                    name: "c:val",
-                    children: [
-                        new BuilderElement({
-                            name: "c:numRef",
-                            children: [
-                                new BuilderElement({
-                                    name: "c:numCache",
-                                    children: [
-                                        new NumberValueElement("c:ptCount", values.length, ""),
-                                        ...values.map(
-                                            (item, index) =>
-                                                new BuilderElement({
-                                                    name: "c:pt",
-                                                    attributes: { idx: { key: "idx", value: index } },
-                                                    children: [new StringContainer("c:v", item.toString())],
-                                                }),
-                                        ),
-                                    ],
-                                }),
-                            ],
-                        }),
-                    ],
+                new NumberSource("c:val", {
+                    formula: `Sheet1!$B$${options.index + 2}:$${column}$${options.index + 2}`,
+                    values,
                 }),
             );
         }

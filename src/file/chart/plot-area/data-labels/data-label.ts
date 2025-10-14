@@ -123,7 +123,9 @@ export class DataLabel extends XmlComponent {
                 this.root.push(new Layout(options.layout));
             }
             if (options.text !== undefined) {
-                this.root.push(new TextSource(typeof options.text === "string" ? { paragraph: { text: options.text } } : options.text));
+                this.root.push(
+                    new TextSource("c:tx", typeof options.text === "string" ? { paragraph: { text: options.text } } : options.text),
+                );
             }
             addDataLabelSharedOptions(this.root, options);
         }

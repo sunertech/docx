@@ -1,7 +1,7 @@
 import { IShapePropertiesOptions, ShapeProperties } from "@file/drawing/inline/graphic/shape-properties/shape-properties";
 import { BooleanElement, XmlAttributeComponent, XmlComponent } from "@file/xml-components";
 import { Chart, IChartOptions } from "./chart";
-import { ExternalData, IExternalDataOptions } from "./external-data";
+import { ExternalData } from "./external-data";
 
 export class ChartSpaceAttributes extends XmlAttributeComponent<{
     readonly c?: string;
@@ -19,12 +19,15 @@ export type IChartSpaceOptions = {
     readonly date1904?: boolean;
     readonly roundedCorners?: boolean;
     readonly shapeProperties?: IShapePropertiesOptions;
-    readonly externalData?: IExternalDataOptions;
 } & IChartOptions;
 
 export class ChartSpace extends XmlComponent {
-    public constructor({ date1904, roundedCorners, shapeProperties, externalData, ...options }: IChartSpaceOptions) {
+    public readonly options: IChartOptions;
+
+    public constructor({ date1904, roundedCorners, shapeProperties, ...options }: IChartSpaceOptions) {
         super("c:chartSpace");
+        this.options = options;
+
         this.root.push(
             new ChartSpaceAttributes({
                 c: "http://schemas.openxmlformats.org/drawingml/2006/chart",
@@ -37,10 +40,18 @@ export class ChartSpace extends XmlComponent {
         if (shapeProperties !== undefined) {
             this.root.push(new ShapeProperties("c:spPr", shapeProperties));
         }
-        if (externalData !== undefined) {
-            this.root.push(new ExternalData(externalData));
-        }
+        this.root.push(new ExternalData({ id: "rId1" }));
 
         this.root.push(new Chart(options));
+    }
+
+    /**
+     * Array of sheet with data table
+     */
+    public get sheetArrayTable(): (number | string)[][] {
+        return [
+            ["", ...(this.options.categories || this.options.barChart?.categories || this.options.barChart?.series[0].categories || [])],
+            ...(this.options.barChart?.series || []).map((serie) => [serie.name || "", ...(serie.values || [])]),
+        ];
     }
 }

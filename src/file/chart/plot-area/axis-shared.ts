@@ -19,7 +19,7 @@ type AxisTypes = "category" | "value" | "date" | "series";
 type ScalingOrientation = "maxMin" | "minMax";
 
 export type AxisSharedOptions = {
-    readonly scaling: {
+    readonly scaling?: {
         readonly logBase?: number;
         readonly orientation?: ScalingOrientation;
         readonly max?: number;
@@ -27,7 +27,7 @@ export type AxisSharedOptions = {
         readonly extensionList?: ExtensionListOptions;
     };
     readonly delete?: boolean;
-    readonly position: AxisPosition;
+    readonly position?: AxisPosition;
     readonly gridlines?: {
         readonly major?: IShapePropertiesOptions;
         readonly minor?: IShapePropertiesOptions;
@@ -48,8 +48,8 @@ export type AxisSharedOptions = {
     };
     readonly shape?: IShapePropertiesOptions;
     readonly textProperties?: TextPropertiesOptions;
-    readonly cross: {
-        readonly axis: AxisTypes;
+    readonly cross?: {
+        readonly axis?: AxisTypes;
         readonly mode?: AxisCrosses;
         readonly at?: number;
     };
@@ -118,7 +118,7 @@ export const addAxisSharedOptions = (
     }
     root.push(new BuilderElement({ name: "c:scaling", children: scalingChildren }));
     root.push(new BooleanElement("c:delete", _delete ?? false, ""));
-    root.push(new StringEnumValueElement<AxisPosition>("c:axPos", position, ""));
+    root.push(new StringEnumValueElement<AxisPosition>("c:axPos", position!, ""));
 
     if (gridlines?.major) {
         root.push(
@@ -158,9 +158,9 @@ export const addAxisSharedOptions = (
     if (textProperties) {
         root.push(new TextProperties("c:txPr", textProperties));
     }
-    root.push(new NumberValueElement("c:crossAx", ids[cross.axis], ""));
-    root.push(new StringEnumValueElement<AxisCrosses>("c:crosses", cross.mode ?? "autoZero", ""));
-    if (cross.at !== undefined) {
-        root.push(new NumberValueElement("c:crossesAt", cross.at, ""));
+    root.push(new NumberValueElement("c:crossAx", ids[cross!.axis!], ""));
+    root.push(new StringEnumValueElement<AxisCrosses>("c:crosses", cross!.mode ?? "autoZero", ""));
+    if (cross!.at !== undefined) {
+        root.push(new NumberValueElement("c:crossesAt", cross!.at, ""));
     }
 };

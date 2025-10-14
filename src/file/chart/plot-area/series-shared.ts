@@ -1,3 +1,4 @@
+import { LineCap } from "@file/drawing/inline/graphic/shape-properties/outline/outline";
 import { IShapePropertiesOptions, ShapeProperties } from "@file/drawing/inline/graphic/shape-properties/shape-properties";
 import { TextSource } from "@file/text/text-source";
 import { BaseXmlComponent, NumberValueElement } from "@file/xml-components";
@@ -12,6 +13,8 @@ export type SeriesSharedInternal = {
     readonly index: number;
 };
 
+const SerieColors = ["accent1", "accent3", "accent4", "accent5", "accent6"] as const;
+
 // <xsd:element name="idx" type="CT_UnsignedInt" minOccurs="1" maxOccurs="1"/>
 // <xsd:element name="order" type="CT_UnsignedInt" minOccurs="1" maxOccurs="1"/>
 // <xsd:element name="tx" type="CT_SerTx" minOccurs="0" maxOccurs="1"/>
@@ -24,9 +27,22 @@ export const addSeriesSharedOptions = (
     root.push(new NumberValueElement("c:idx", index, ""));
     root.push(new NumberValueElement("c:order", order ?? index, ""));
     if (name !== undefined) {
-        root.push(new TextSource(name));
+        root.push(new TextSource("c:tx", { formula: `Sheet1!$A$${index + 2}`, values: [name] }));
     }
-    if (shape) {
-        root.push(new ShapeProperties("c:spPr", shape));
-    }
+    root.push(
+        new ShapeProperties(
+            "c:spPr",
+            shape || {
+                type: "solidFill",
+                solidFillType: "scheme",
+                value: SerieColors[index % SerieColors.length],
+                outline: {
+                    type: "noFill",
+                    width: 12700,
+                    cap: LineCap.FLAT,
+                    join: { type: "miter", limit: 400000 },
+                },
+            },
+        ),
+    );
 };
