@@ -1,5 +1,6 @@
 import { ExtensionList, ExtensionListOptions } from "@file/chart/extension-list";
 import { Marker, MarkerOptions } from "@file/chart/marker/marker";
+import { LineCap, PresetLineDash } from "@file/drawing/inline/graphic/shape-properties/outline/outline";
 import { NumberSource } from "@file/number/number-source";
 import { TextSource } from "@file/text/text-source";
 import { BooleanElement, XmlComponent } from "@file/xml-components";
@@ -9,18 +10,6 @@ import { DataPoint, DataPointOptions } from "../data-point/data-point";
 import { ErrorBars, ErrorBarsOptions } from "../error-bars/error-bars";
 import { SeriesSharedInternal, SeriesSharedOptions, addSeriesSharedOptions } from "../series-shared";
 import { Trendline, TrendlineOptions } from "../trendline/trendline";
-
-export type LineSeriesOptions = SeriesSharedOptions & {
-    readonly marker?: MarkerOptions;
-    readonly dataPoints?: DataPointOptions[];
-    readonly dataLabels?: DataLabelsOptions;
-    readonly trendlines?: TrendlineOptions[];
-    readonly errorBars?: ErrorBarsOptions;
-    readonly categories?: string[];
-    readonly values?: number[];
-    readonly smooth?: boolean;
-    readonly extensionList?: ExtensionListOptions;
-};
 
 //   <xsd:complexType name="CT_LineSer">
 //     <xsd:sequence>
@@ -37,6 +26,20 @@ export type LineSeriesOptions = SeriesSharedOptions & {
 //     </xsd:sequence>
 //   </xsd:complexType>
 
+export type LineSeriesOptions = SeriesSharedOptions & {
+    readonly marker?: MarkerOptions;
+    readonly dataPoints?: DataPointOptions[];
+    readonly dataLabels?: DataLabelsOptions;
+    readonly trendlines?: TrendlineOptions[];
+    readonly errorBars?: ErrorBarsOptions;
+    readonly categories?: string[];
+    readonly values?: number[];
+    readonly smooth?: boolean;
+    readonly extensionList?: ExtensionListOptions;
+};
+
+const LineSerieColors = ["accent4", "accent5", "accent6", "accent1", "accent3"] as const;
+
 export class LineSeries extends XmlComponent {
     public constructor({
         marker,
@@ -51,7 +54,22 @@ export class LineSeries extends XmlComponent {
         ...options
     }: LineSeriesOptions & SeriesSharedInternal) {
         super("c:ser");
-        addSeriesSharedOptions(this.root, options);
+        addSeriesSharedOptions(this.root, {
+            shape: {
+                type: "solidFill",
+                solidFillType: "scheme",
+                value: LineSerieColors[options.index % LineSerieColors.length],
+                outline: {
+                    type: "solidFill",
+                    solidFillType: "rgb",
+                    value: "3F6EC3",
+                    width: 47625,
+                    cap: LineCap.FLAT,
+                    dash: { type: "preset", value: PresetLineDash.SOLID },
+                },
+            },
+            ...options,
+        });
         if (marker) {
             this.root.push(new Marker(marker));
         }
