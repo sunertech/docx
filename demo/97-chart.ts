@@ -1,5 +1,5 @@
 // Simple example to add check boxes to a document
-import { ChartRun, Document, Packer, Paragraph } from "@sunertech/docx";
+import { ChartRun, Document, LegendPosition, Packer, Paragraph } from "@sunertech/docx";
 import * as fs from "fs";
 
 const doc = new Document({
@@ -17,7 +17,7 @@ const doc = new Document({
                                 horizontalPosition: { align: "center", relative: "page" },
                                 verticalPosition: { align: "center", relative: "page" },
                             },
-                            legend: { position: "t" },
+                            legend: { position: LegendPosition.TOP },
                             valueAxis: {
                                 title: {
                                     textSource: {

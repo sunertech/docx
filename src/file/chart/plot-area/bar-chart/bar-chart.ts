@@ -9,8 +9,17 @@ import {
 } from "@file/xml-components";
 import { BarSeries, BarSeriesOptions } from "./bar-series";
 
-type BarDirection = "bar" | "col";
-type BarGrouping = "percentStacked" | "clustered" | "standard" | "stacked";
+export enum BarDirection {
+    BAR = "bar",
+    COLUMN = "col",
+}
+
+export enum BarGrouping {
+    PERCENT_STACKED = "percentStacked",
+    CLUSTERED = "clustered",
+    STANDARD = "standard",
+    STACKED = "stacked",
+}
 
 export type BarChartOptions = {
     readonly categories?: string[];
@@ -56,8 +65,8 @@ export class BarChart extends XmlComponent {
         refOffset,
     }: BarChartOptions & InternalOptions) {
         super("c:barChart");
-        this.root.push(new StringEnumValueElement<BarDirection>("c:barDir", direction || "col", ""));
-        this.root.push(new StringEnumValueElement<BarGrouping>("c:grouping", grouping || "stacked", ""));
+        this.root.push(new StringEnumValueElement<BarDirection>("c:barDir", direction || BarDirection.COLUMN, ""));
+        this.root.push(new StringEnumValueElement<BarGrouping>("c:grouping", grouping || BarGrouping.STACKED, ""));
         this.root.push(new BooleanElement("c:varyColors", varyColors ?? false, ""));
         series.forEach((item, index) => {
             this.root.push(new BarSeries({ categories, refOffset, ...item, index }));

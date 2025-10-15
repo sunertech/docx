@@ -10,7 +10,14 @@ import { PictureOptions, PictureOptionsOptions } from "../picture-options/pictur
 import { SeriesSharedInternal, SeriesSharedOptions, addSeriesSharedOptions } from "../series-shared";
 import { Trendline, TrendlineOptions } from "../trendline/trendline";
 
-type Shape = "cone" | "coneToMax" | "box" | "cylinder" | "pyramid" | "pyramidToMax";
+export enum BarShape {
+    CONE = "cone",
+    CONE_TO_MAX = "coneToMax",
+    BOX = "box",
+    CYLINDER = "cylinder",
+    PYRAMID = "pyramid",
+    PYRAMID_TO_MAX = "pyramidToMax",
+}
 
 export type BarSeriesOptions = SeriesSharedOptions & {
     readonly invertIfNegative?: boolean;
@@ -21,7 +28,7 @@ export type BarSeriesOptions = SeriesSharedOptions & {
     readonly errorBars?: ErrorBarsOptions;
     readonly categories?: string[];
     readonly values?: number[];
-    readonly shape?: Shape;
+    readonly shape?: BarShape;
     readonly extensionList?: ExtensionListOptions;
 };
 
@@ -98,7 +105,7 @@ export class BarSeries extends XmlComponent {
             );
         }
         if (shape) {
-            this.root.push(new StringEnumValueElement<Shape>("c:shape", shape, ""));
+            this.root.push(new StringEnumValueElement<BarShape>("c:shape", shape, ""));
         }
         if (extensionList) {
             this.root.push(new ExtensionList(extensionList));

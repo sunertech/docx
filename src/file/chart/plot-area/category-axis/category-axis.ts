@@ -2,7 +2,11 @@ import { ExtensionList, ExtensionListOptions } from "@file/chart/extension-list"
 import { BooleanElement, NumberValueElement, StringEnumValueElement, StringValueElement, XmlComponent } from "@file/xml-components";
 import { AxisSharedInternal, AxisSharedOptions, addAxisSharedOptions } from "../axis-shared";
 
-type LabelAlign = "ctr" | "l" | "r";
+export enum LabelAlign {
+    CENTER = "ctr",
+    LEFT = "l",
+    RIGHT = "r",
+}
 
 export type CategoryAxisOptions = {
     readonly auto?: boolean;
@@ -36,7 +40,7 @@ export class CategoryAxis extends XmlComponent {
         super("c:catAx");
         addAxisSharedOptions(this.root, options);
         this.root.push(new BooleanElement("c:auto", auto ?? true, ""));
-        this.root.push(new StringEnumValueElement<LabelAlign>("c:lblAlgn", label?.align ?? "ctr", ""));
+        this.root.push(new StringEnumValueElement<LabelAlign>("c:lblAlgn", label?.align ?? LabelAlign.CENTER, ""));
         if (label?.offset !== undefined) {
             this.root.push(
                 typeof label.offset === "string"

@@ -12,7 +12,7 @@ import { createSolidFill } from "./solid-fill";
 //     <xsd:enumeration value="flat"/>
 //     </xsd:restriction>
 // </xsd:simpleType>
-export const enum LineCap {
+export enum LineCap {
     ROUND = "rnd",
     SQUARE = "sq",
     FLAT = "flat",
@@ -27,7 +27,7 @@ export const enum LineCap {
 //         <xsd:enumeration value="tri"/>
 //     </xsd:restriction>
 // </xsd:simpleType>
-export const enum CompoundLine {
+export enum CompoundLine {
     SINGLE = "sng",
     DOUBLE = "dbl",
     THICK_THIN = "thickThin",
@@ -41,7 +41,7 @@ export const enum CompoundLine {
 //         <xsd:enumeration value="in"/>
 //     </xsd:restriction>
 // </xsd:simpleType>
-export const enum PenAlignment {
+export enum PenAlignment {
     CENTER = "ctr",
     INSET = "in",
 }

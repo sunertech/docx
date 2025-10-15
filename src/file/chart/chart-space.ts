@@ -1,9 +1,9 @@
 import { IShapePropertiesOptions, ShapeProperties } from "@file/drawing/inline/graphic/shape-properties/shape-properties";
 import { BooleanElement, XmlAttributeComponent, XmlComponent } from "@file/xml-components";
-import { Chart, IChartOptions } from "./chart";
+import { Chart, ChartOptions } from "./chart";
 import { ExternalData } from "./external-data";
 
-export class ChartSpaceAttributes extends XmlAttributeComponent<{
+class ChartSpaceAttributes extends XmlAttributeComponent<{
     readonly c?: string;
     readonly a?: string;
     readonly r?: string;
@@ -15,16 +15,16 @@ export class ChartSpaceAttributes extends XmlAttributeComponent<{
     };
 }
 
-export type IChartSpaceOptions = {
+export type ChartSpaceOptions = {
     readonly date1904?: boolean;
     readonly roundedCorners?: boolean;
     readonly shapeProperties?: IShapePropertiesOptions;
-} & IChartOptions;
+} & ChartOptions;
 
 export class ChartSpace extends XmlComponent {
-    public readonly options: IChartOptions;
+    public readonly options: ChartOptions;
 
-    public constructor({ date1904, roundedCorners, shapeProperties, ...options }: IChartSpaceOptions) {
+    public constructor({ date1904, roundedCorners, shapeProperties, ...options }: ChartSpaceOptions) {
         super("c:chartSpace");
         this.options = options;
 

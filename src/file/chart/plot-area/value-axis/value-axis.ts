@@ -3,7 +3,10 @@ import { NumberValueElement, StringEnumValueElement, XmlComponent } from "@file/
 import { AxisSharedInternal, AxisSharedOptions, addAxisSharedOptions } from "../axis-shared";
 import { DisplayUnit, DisplayUnitOptions } from "../display-unit/display-unit";
 
-type CrossBetween = "between" | "midCat";
+export enum CrossBetween {
+    BETWEEN = "between",
+    MIDDLE_CATEGORY = "midCat",
+}
 
 export type ValueAxisOptions = {
     readonly crossBetween?: CrossBetween;

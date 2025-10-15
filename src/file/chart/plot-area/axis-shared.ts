@@ -11,12 +11,39 @@ import {
 import { ExtensionList, ExtensionListOptions } from "../extension-list";
 import { Title, TitleOptions } from "../title/title";
 
-type AxisPosition = "b" | "l" | "r" | "t";
-type TickMark = "cross" | "in" | "none" | "out";
-type TickLabelPosition = "high" | "low" | "nextTo" | "none";
-type AxisCrosses = "autoZero" | "max" | "min";
-type AxisTypes = "category" | "value" | "date" | "series";
-type ScalingOrientation = "maxMin" | "minMax";
+export enum AxisPosition {
+    BOTTOM = "b",
+    LEFT = "l",
+    RIGHT = "r",
+    TOP = "t",
+}
+export enum TickMark {
+    CROSS = "cross",
+    IN = "in",
+    NONE = "none",
+    OUT = "out",
+}
+export enum TickLabelPosition {
+    HIGH = "high",
+    LOW = "low",
+    NEXT_TO = "nextTo",
+    NONE = "none",
+}
+export enum AxisCrosses {
+    AUTO_ZERO = "autoZero",
+    MAX = "max",
+    MIN = "min",
+}
+export enum AxisTypes {
+    CATEGORY = "category",
+    VALUE = "value",
+    DATE = "date",
+    SERIES = "series",
+}
+export enum ScalingOrientation {
+    MAX_MIN = "maxMin",
+    MIN_MAX = "minMax",
+}
 
 export type AxisSharedOptions = {
     readonly scaling?: {
@@ -106,7 +133,9 @@ export const addAxisSharedOptions = (
     if (scaling?.logBase !== undefined) {
         scalingChildren.push(new NumberValueElement("c:logBase", scaling.logBase, ""));
     }
-    scalingChildren.push(new StringEnumValueElement<ScalingOrientation>("c:orientation", scaling?.orientation || "minMax", ""));
+    scalingChildren.push(
+        new StringEnumValueElement<ScalingOrientation>("c:orientation", scaling?.orientation || ScalingOrientation.MIN_MAX, ""),
+    );
     if (scaling?.max !== undefined) {
         scalingChildren.push(new NumberValueElement("c:max", scaling.max, ""));
     }
@@ -149,9 +178,9 @@ export const addAxisSharedOptions = (
             },
         }),
     );
-    root.push(new StringEnumValueElement<TickMark>("c:majorTickMark", tick?.mark?.major ?? "none", ""));
-    root.push(new StringEnumValueElement<TickMark>("c:minorTickMark", tick?.mark?.minor ?? "none", ""));
-    root.push(new StringEnumValueElement<TickLabelPosition>("c:tickLblPos", tick?.label?.position ?? "low", ""));
+    root.push(new StringEnumValueElement<TickMark>("c:majorTickMark", tick?.mark?.major ?? TickMark.NONE, ""));
+    root.push(new StringEnumValueElement<TickMark>("c:minorTickMark", tick?.mark?.minor ?? TickMark.NONE, ""));
+    root.push(new StringEnumValueElement<TickLabelPosition>("c:tickLblPos", tick?.label?.position ?? TickLabelPosition.LOW, ""));
     if (shape) {
         root.push(new ShapeProperties("c:spPr", shape));
     }
@@ -159,7 +188,7 @@ export const addAxisSharedOptions = (
         root.push(new TextProperties("c:txPr", textProperties));
     }
     root.push(new NumberValueElement("c:crossAx", ids[cross!.axis!], ""));
-    root.push(new StringEnumValueElement<AxisCrosses>("c:crosses", cross!.mode ?? "autoZero", ""));
+    root.push(new StringEnumValueElement<AxisCrosses>("c:crosses", cross!.mode ?? AxisCrosses.AUTO_ZERO, ""));
     if (cross!.at !== undefined) {
         root.push(new NumberValueElement("c:crossesAt", cross!.at, ""));
     }

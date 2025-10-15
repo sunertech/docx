@@ -1,7 +1,13 @@
 import { NumberValueElement, StringEnumValueElement, XmlComponent } from "@file/xml-components";
 
-type LayoutTarget = "inner" | "outer";
-type LayoutMode = "edge" | "factor";
+export enum LayoutTarget {
+    INNER = "inner",
+    OUTER = "outer",
+}
+export enum LayoutMode {
+    EDGE = "edge",
+    FACTOR = "factor",
+}
 
 export type ManualLayoutOptions = {
     readonly target?: LayoutTarget;

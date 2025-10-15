@@ -5,7 +5,13 @@ import { ExtensionList, ExtensionListOptions } from "../extension-list";
 import { Layout, LayoutOptions } from "../plot-area/layout/layout";
 import { LegendEntry, LegendEntryOptions } from "./legend-entry";
 
-type LegendPosition = "r" | "t" | "l" | "b" | "tr";
+export enum LegendPosition {
+    RIGHT = "r",
+    TOP = "t",
+    LEFT = "l",
+    BOTTOM = "b",
+    TOP_RIGHT = "tr",
+}
 
 export type LegendOptions = {
     readonly position?: LegendPosition;

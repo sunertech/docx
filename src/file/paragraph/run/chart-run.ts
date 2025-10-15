@@ -1,4 +1,4 @@
-import { ChartSpace, IChartSpaceOptions } from "@file/chart";
+import { ChartSpace, ChartSpaceOptions } from "@file/chart/chart-space";
 import { Drawing, DrawingCoreOptions } from "@file/drawing";
 import { Chart } from "@file/drawing/inline/graphic/graphic-data/chart/chart";
 import { SizeProperty } from "@file/media";
@@ -6,13 +6,13 @@ import { Run } from "@file/paragraph/run";
 import { IContext, IXmlableObject } from "@file/xml-components";
 import { uniqueUuid } from "@util/convenience-functions";
 
-export type IChartRunOptions = IChartSpaceOptions & DrawingCoreOptions & SizeProperty;
+export type ChartRunOptions = ChartSpaceOptions & DrawingCoreOptions & SizeProperty;
 
 export class ChartRun extends Run {
     private readonly id: string;
     private readonly chartSpace: ChartSpace;
 
-    public constructor({ width, height, floating, altText, outline, ...options }: IChartRunOptions) {
+    public constructor({ width, height, floating, altText, outline, ...options }: ChartRunOptions) {
         super({});
         this.chartSpace = new ChartSpace(options);
         this.id = `chart:${uniqueUuid()}`;

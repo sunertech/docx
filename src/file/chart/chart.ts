@@ -3,7 +3,7 @@ import { Legend, LegendOptions } from "./legend/legend";
 import { PlotArea, PlotAreaOptions } from "./plot-area/plot-area";
 import { Title, TitleOptions } from "./title/title";
 
-export type IChartOptions = {
+export type ChartOptions = {
     readonly title?: TitleOptions | string;
     readonly legend?: LegendOptions;
 } & PlotAreaOptions;
@@ -23,7 +23,7 @@ export type IChartOptions = {
 // <xsd:element name="extLst" type="CT_ExtensionList" minOccurs="0" maxOccurs="1"/>
 
 export class Chart extends XmlComponent {
-    public constructor({ title, legend, ...options }: IChartOptions) {
+    public constructor({ title, legend, ...options }: ChartOptions) {
         super("c:chart");
         if (title) {
             this.root.push(new Title(typeof title === "string" ? { textSource: { paragraph: { text: title } } } : title));

@@ -13,7 +13,17 @@ import {
 } from "@file/xml-components";
 import { Layout, LayoutOptions } from "../layout/layout";
 
-type DataLabelPosition = "bestFit" | "b" | "ctr" | "inBase" | "inEnd" | "l" | "outEnd" | "r" | "t";
+export enum DataLabelPosition {
+    BEST_FIT = "bestFit",
+    BOTTOM = "b",
+    CENTER = "ctr",
+    IN_BASE = "inBase",
+    IN_END = "inEnd",
+    LEFT = "l",
+    OUT_END = "outEnd",
+    RIGHT = "r",
+    TOP = "t",
+}
 
 // <xsd:element name="numFmt" type="CT_NumFmt" minOccurs="0" maxOccurs="1"/>
 // <xsd:element name="spPr" type="a:CT_ShapeProperties" minOccurs="0" maxOccurs="1"/>
@@ -99,7 +109,7 @@ export const addDataLabelSharedOptions = (
     if (textProperties) {
         root.push(new TextProperties("c:txPr", textProperties));
     }
-    root.push(new StringEnumValueElement<DataLabelPosition>("c:dLblPos", position ?? "ctr", ""));
+    root.push(new StringEnumValueElement<DataLabelPosition>("c:dLblPos", position ?? DataLabelPosition.CENTER, ""));
     root.push(new BooleanElement("c:showLegendKey", showLegendKey ?? false, ""));
     root.push(new BooleanElement("c:showVal", showValue ?? false, ""));
     root.push(new BooleanElement("c:showCatName", showCategoryName ?? false, ""));

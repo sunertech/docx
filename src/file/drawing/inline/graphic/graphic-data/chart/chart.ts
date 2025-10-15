@@ -10,12 +10,12 @@ export class ChartAttributes extends XmlAttributeComponent<{
     };
 }
 
-type IChartOptions = {
+type ChartOptions = {
     readonly id: string;
 };
 
 export class Chart extends XmlComponent {
-    public constructor({ id }: IChartOptions) {
+    public constructor({ id }: ChartOptions) {
         super("c:chart");
 
         this.root.push(

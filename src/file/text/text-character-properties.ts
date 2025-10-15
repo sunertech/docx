@@ -22,9 +22,17 @@ type TextUnderlineType =
     | "wavyHeavy"
     | "wavyDbl";
 
-type TextStrikeType = "noStrike" | "sngStrike" | "dblStrike";
+export enum TextStrikeType {
+    NO_STRIKE = "noStrike",
+    SINGLE_STRIKE = "sngStrike",
+    DOUBLE_STRIKE = "dblStrike",
+}
 
-type TextCapsType = "none" | "small" | "all";
+export enum TextCapsType {
+    NONE = "none",
+    SMALL = "small",
+    ALL = "all",
+}
 
 type TextCharacterAttributesOptions = {
     readonly kumimoji?: boolean;

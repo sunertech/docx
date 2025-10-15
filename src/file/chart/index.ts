@@ -1,1 +1,10 @@
-export * from "./chart-space";
+export { LegendPosition } from "./legend/legend";
+export { MarkerStyle } from "./marker/marker";
+export { AxisCrosses, AxisPosition, AxisTypes, ScalingOrientation, TickLabelPosition, TickMark } from "./plot-area/axis-shared";
+export { BarDirection, BarGrouping } from "./plot-area/bar-chart/bar-chart";
+export { BarShape } from "./plot-area/bar-chart/bar-series";
+export { LabelAlign } from "./plot-area/category-axis/category-axis";
+export { DataLabelPosition } from "./plot-area/data-labels/data-label";
+export { LayoutMode, LayoutTarget } from "./plot-area/layout/manual-layout";
+export { ChartGrouping } from "./plot-area/line-chart/line-chart-shared";
+export { CrossBetween } from "./plot-area/value-axis/value-axis";

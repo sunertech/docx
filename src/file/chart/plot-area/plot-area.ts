@@ -3,6 +3,7 @@ import { IShapePropertiesOptions, ShapeProperties } from "@file/drawing/inline/g
 import { XmlComponent } from "@file/xml-components";
 import { AreaChart, AreaChartOptions } from "./area-chart/area-chart";
 import { Area3DChart, Area3DChartOptions } from "./area3d-chart/area3d-chart";
+import { AxisPosition, AxisTypes, TickLabelPosition } from "./axis-shared";
 import { BarChart, BarChartOptions } from "./bar-chart/bar-chart";
 import { Bar3DChart, Bar3DChartOptions } from "./bar3d-chart/bar3d-chart";
 import { BubbleChart, BubbleChartOptions } from "./bubble-chart/bubble-chart";
@@ -183,17 +184,17 @@ export class PlotArea extends XmlComponent {
             this.root.push(
                 new ValueAxis({
                     cross: {
-                        axis: "category",
+                        axis: AxisTypes.CATEGORY,
                         ...valueAxis?.cross,
                     },
                     tick: {
                         label: {
-                            position: "nextTo",
+                            position: TickLabelPosition.NEXT_TO,
                             ...valueAxis?.tick?.label,
                         },
                         ...valueAxis?.tick,
                     },
-                    position: "l",
+                    position: AxisPosition.LEFT,
                     scaling: {},
                     gridlines: {
                         major: valueAxis?.gridlines?.major ?? {
@@ -224,10 +225,10 @@ export class PlotArea extends XmlComponent {
             this.root.push(
                 new CategoryAxis({
                     cross: {
-                        axis: "value",
+                        axis: AxisTypes.VALUE,
                         ...categoryAxis?.cross,
                     },
-                    position: "b",
+                    position: AxisPosition.BOTTOM,
                     scaling: {},
                     ...categoryAxis,
                     id: categoryAxisId,
