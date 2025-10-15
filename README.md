@@ -59,7 +59,7 @@ Press `endpoint` on the `RunKit` website:
 -   https://runkit.com/dolanmiu/docx-demo8 - Header and Footer
 -   https://runkit.com/dolanmiu/docx-demo10 - **My CV generated with docx**
 
-More [here](https://github.com/dolanmiu/docx/tree/master/demo)
+More [here](https://github.com/sunertech/docx/tree/master/demo)
 
 # How to use & Documentation
 
@@ -71,7 +71,7 @@ Experience `docx` in action through [Docx.js Editor][docxjs-editor-url], an inte
 
 # Examples
 
-Check the [demo folder](https://github.com/dolanmiu/docx/tree/master/demo) for examples.
+Check the [demo folder](https://github.com/sunertech/docx/tree/master/demo) for examples.
 
 # Contributing
 
@@ -108,14 +108,14 @@ Made with 💖
 [npm-url]: https://npmjs.org/package/docx
 [downloads-image]: https://img.shields.io/npm/dm/docx.svg
 [downloads-url]: https://npmjs.org/package/docx
-[github-actions-workflow-image]: https://github.com/dolanmiu/docx/workflows/Default/badge.svg
-[github-actions-workflow-url]: https://github.com/dolanmiu/docx/actions
-[snky-image]: https://snyk.io/test/github/dolanmiu/docx/badge.svg
-[snky-url]: https://snyk.io/test/github/dolanmiu/docx
+[github-actions-workflow-image]: https://github.com/sunertech/docx/workflows/Default/badge.svg
+[github-actions-workflow-url]: https://github.com/sunertech/docx/actions
+[snky-image]: https://snyk.io/test/github/sunertech/docx/badge.svg
+[snky-url]: https://snyk.io/test/github/sunertech/docx
 [pr-image]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [pr-url]: http://makeapullrequest.com
-[codecov-image]: https://codecov.io/gh/dolanmiu/docx/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/dolanmiu/docx
+[codecov-image]: https://codecov.io/gh/sunertech/docx/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/sunertech/docx
 [patreon-image]: https://user-images.githubusercontent.com/2917613/51251459-4e880480-1991-11e9-92bf-38b96675a9e2.png
 [patreon-url]: https://www.patreon.com/dolanmiu
 [browserstack-image]: https://user-images.githubusercontent.com/2917613/54233552-128e9d00-4505-11e9-88fb-025a4e04007c.png
