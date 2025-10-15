@@ -1,7 +1,7 @@
 // Example of how you would create a table and add data to it
 
+import { Document, HeadingLevel, Packer, Paragraph, Table, TableCell, TableRow, TextDirection, VerticalAlignTable } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, HeadingLevel, Packer, Paragraph, Table, TableCell, TableRow, VerticalAlignTable, TextDirection } from "docx";
 
 const doc = new Document({
     sections: [

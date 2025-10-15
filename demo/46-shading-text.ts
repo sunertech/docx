@@ -1,7 +1,7 @@
 // Shading text
 
+import { AlignmentType, Document, Header, Packer, Paragraph, ShadingType, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { AlignmentType, Document, Header, Packer, Paragraph, ShadingType, TextRun } from "docx";
 
 const doc = new Document({
     sections: [

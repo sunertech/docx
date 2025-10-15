@@ -1,6 +1,5 @@
 // Setting styles with JavaScript configuration
 
-import * as fs from "fs";
 import {
     AlignmentType,
     convertInchesToTwip,
@@ -8,6 +7,7 @@ import {
     Footer,
     HeadingLevel,
     ImageRun,
+    LevelFormat,
     Packer,
     Paragraph,
     Table,
@@ -15,8 +15,8 @@ import {
     TableRow,
     TabStopPosition,
     UnderlineType,
-    LevelFormat,
-} from "docx";
+} from "@sunertech/docx";
+import * as fs from "fs";
 
 const table = new Table({
     rows: [

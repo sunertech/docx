@@ -1,7 +1,7 @@
 // Patch a document with patches
 
+import { patchDocument, PatchType, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { patchDocument, PatchType, TextRun } from "docx";
 
 patchDocument({
     outputType: "nodebuffer",

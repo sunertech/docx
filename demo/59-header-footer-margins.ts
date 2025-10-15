@@ -1,7 +1,7 @@
 // Move + offset header and footer
 
+import { Document, Footer, Header, Packer, Paragraph } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, Footer, Header, Packer, Paragraph } from "docx";
 
 const doc = new Document({
     sections: [

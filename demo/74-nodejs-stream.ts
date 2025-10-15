@@ -1,7 +1,7 @@
 // Exporting the document as a stream
 
+import { Document, Packer, Paragraph, Tab, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, Packer, Paragraph, Tab, TextRun } from "docx";
 
 const doc = new Document({
     sections: [

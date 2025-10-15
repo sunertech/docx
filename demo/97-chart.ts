@@ -1,5 +1,5 @@
 // Simple example to add check boxes to a document
-import { ChartRun, Document, Packer, Paragraph } from "docx";
+import { ChartRun, Document, Packer, Paragraph } from "@sunertech/docx";
 import * as fs from "fs";
 
 const doc = new Document({

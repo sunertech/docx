@@ -1,6 +1,5 @@
 // Patch a document with patches
 
-import * as fs from "fs";
 import {
     ExternalHyperlink,
     HeadingLevel,
@@ -14,7 +13,8 @@ import {
     TextDirection,
     TextRun,
     VerticalAlignTable,
-} from "docx";
+} from "@sunertech/docx";
+import * as fs from "fs";
 
 patchDocument({
     outputType: "nodebuffer",

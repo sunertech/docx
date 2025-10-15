@@ -1,7 +1,17 @@
 // Numbering and bullet points example
 
+import {
+    AlignmentType,
+    convertInchesToTwip,
+    Document,
+    Footer,
+    Header,
+    HeadingLevel,
+    LevelFormat,
+    Packer,
+    Paragraph,
+} from "@sunertech/docx";
 import * as fs from "fs";
-import { AlignmentType, convertInchesToTwip, Document, Footer, Header, HeadingLevel, LevelFormat, Packer, Paragraph } from "docx";
 
 const doc = new Document({
     numbering: {

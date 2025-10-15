@@ -1,7 +1,7 @@
 // Example demonstrating line numbers with suppression.
 
+import { Document, HeadingLevel, LineNumberRestartFormat, Packer, Paragraph } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, HeadingLevel, LineNumberRestartFormat, Packer, Paragraph } from "docx";
 
 const doc = new Document({
     sections: [

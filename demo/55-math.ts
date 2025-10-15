@@ -1,6 +1,5 @@
 // Simple example to add text to a document
 
-import * as fs from "fs";
 import {
     Document,
     Math,
@@ -8,6 +7,9 @@ import {
     MathCurlyBrackets,
     MathFraction,
     MathFunction,
+    MathIntegral,
+    MathLimitLower,
+    MathLimitUpper,
     MathPreSubSuperScript,
     MathRadical,
     MathRoundBrackets,
@@ -16,14 +18,12 @@ import {
     MathSubScript,
     MathSubSuperScript,
     MathSum,
-    MathIntegral,
     MathSuperScript,
     Packer,
     Paragraph,
     TextRun,
-    MathLimitLower,
-    MathLimitUpper,
-} from "docx";
+} from "@sunertech/docx";
+import * as fs from "fs";
 
 const doc = new Document({
     sections: [

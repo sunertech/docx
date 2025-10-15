@@ -12,6 +12,6 @@ Alternatively, you can use `CommentReference` to specify a comment at a specific
 
 ### Example
 
-[Example](https://raw.githubusercontent.com/dolanmiu/docx/master/demo/73-comments.ts ':include')
+[Example](https://raw.githubusercontent.com/sunertech/docx/master/demo/73-comments.ts ':include')
 
-_Source: https://github.com/dolanmiu/docx/blob/master/demo/73-comments.ts_
+_Source: https://github.com/sunertech/docx/blob/master/demo/73-comments.ts_

@@ -1,7 +1,7 @@
 // Sequential Captions
 
+import { Document, Packer, Paragraph, SequentialIdentifier, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, Packer, Paragraph, SequentialIdentifier, TextRun } from "docx";
 
 const doc = new Document({
     sections: [

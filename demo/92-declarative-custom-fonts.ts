@@ -1,7 +1,7 @@
 // Simple example to add text to a document
 
+import { Document, Packer, Paragraph, Tab, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, Packer, Paragraph, Tab, TextRun } from "docx";
 
 const font = fs.readFileSync("./demo/assets/Pacifico.ttf");
 

@@ -1,6 +1,5 @@
 // Example of how to add images to the document - You can use Buffers, UInt8Arrays or Base64 strings
 
-import * as fs from "fs";
 import {
     convertMillimetersToTwip,
     Document,
@@ -11,7 +10,8 @@ import {
     Paragraph,
     VerticalPositionAlign,
     VerticalPositionRelativeFrom,
-} from "docx";
+} from "@sunertech/docx";
+import * as fs from "fs";
 
 const doc = new Document({
     sections: [

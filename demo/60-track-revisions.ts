@@ -1,6 +1,5 @@
 // Track Revisions aka. "Track Changes"
 
-import * as fs from "fs";
 import {
     AlignmentType,
     DeletedTextRun,
@@ -14,7 +13,8 @@ import {
     ShadingType,
     Tab,
     TextRun,
-} from "docx";
+} from "@sunertech/docx";
+import * as fs from "fs";
 
 /*
     For reference, see

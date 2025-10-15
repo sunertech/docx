@@ -1,7 +1,7 @@
 // Simple example to add text to a document
 
+import { Document, LineRuleType, Packer, Paragraph, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, LineRuleType, Packer, Paragraph, TextRun } from "docx";
 
 const doc = new Document({
     sections: [

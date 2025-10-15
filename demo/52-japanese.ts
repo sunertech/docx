@@ -1,7 +1,7 @@
 // Japanese text - Need to use a Japanese font
 
+import { Document, HeadingLevel, Packer, Paragraph } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, HeadingLevel, Packer, Paragraph } from "docx";
 
 const doc = new Document({
     styles: {

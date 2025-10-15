@@ -11,7 +11,7 @@ export default defineConfig({
         dts({
             rollupTypes: true,
             afterBuild: () => {
-                // https://github.com/dolanmiu/docx/pull/2883
+                // https://github.com/sunertech/docx/pull/2883
                 // To pass publint - `npx publint@latest`
                 copyFileSync("dist/index.d.ts", "dist/index.d.cts");
             },

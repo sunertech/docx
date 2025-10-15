@@ -1,7 +1,7 @@
 // Page break before example
 
+import { Document, Packer, Paragraph } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, Packer, Paragraph } from "docx";
 
 const doc = new Document({
     sections: [

@@ -203,6 +203,6 @@ For these properties, the rules state the following conflict resolution in case 
 
 Importing Images from file system path
 
-[Example](https://raw.githubusercontent.com/dolanmiu/docx/master/demo/2-declaritive-styles.ts ':include')
+[Example](https://raw.githubusercontent.com/sunertech/docx/master/demo/2-declaritive-styles.ts ':include')
 
-_Source: https://github.com/dolanmiu/docx/blob/master/demo/2-declaritive-styles.ts_
+_Source: https://github.com/sunertech/docx/blob/master/demo/2-declaritive-styles.ts_

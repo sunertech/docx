@@ -1,7 +1,7 @@
 // Export to base64 string - Useful in a browser environment.
 
+import { Document, Packer, Paragraph, Tab, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, Packer, Paragraph, Tab, TextRun } from "docx";
 
 const doc = new Document({
     sections: [

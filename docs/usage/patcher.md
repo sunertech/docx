@@ -10,7 +10,7 @@ The patcher allows you to modify existing documents, and add new content to them
 
 ```ts
 import * as fs from "fs";
-import { patchDocument } from "docx";
+import { patchDocument } from "@sunertech/docx";
 
 patchDocument(fs.readFileSync("My Document.docx"), {
     patches: {
@@ -92,6 +92,6 @@ patchDocument(fs.readFileSync("My Document.docx"), {
 
 ## Demo
 
-_Source: https://github.com/dolanmiu/docx/blob/master/demo/85-template-document.ts_
+_Source: https://github.com/sunertech/docx/blob/master/demo/85-template-document.ts_
 
-[Example](https://raw.githubusercontent.com/dolanmiu/docx/master/demo/85-template-document.ts ":include :type=code typescript")
+[Example](https://raw.githubusercontent.com/sunertech/docx/master/demo/85-template-document.ts ":include :type=code typescript")

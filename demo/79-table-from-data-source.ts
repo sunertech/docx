@@ -1,6 +1,5 @@
 // Example of how you would create a table and add data to it from a data source
 
-import * as fs from "fs";
 import {
     Document,
     HeadingLevel,
@@ -9,11 +8,12 @@ import {
     Table,
     TableCell,
     TableRow,
-    VerticalAlignTable,
     TextDirection,
     TextRun,
+    VerticalAlignTable,
     WidthType,
-} from "docx";
+} from "@sunertech/docx";
+import * as fs from "fs";
 
 interface StockPrice {
     readonly date: Date;

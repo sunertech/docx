@@ -1,7 +1,7 @@
 // Custom styles using JavaScript configuration
 
+import { convertInchesToTwip, Document, HeadingLevel, Packer, Paragraph, UnderlineType } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, convertInchesToTwip, HeadingLevel, Packer, Paragraph, UnderlineType } from "docx";
 
 const doc = new Document({
     styles: {

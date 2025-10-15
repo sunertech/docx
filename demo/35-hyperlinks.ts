@@ -1,7 +1,7 @@
 // Example on how to add hyperlinks to websites
 
+import { Document, ExternalHyperlink, Footer, FootnoteReferenceRun, ImageRun, Packer, Paragraph, TextRun } from "@sunertech/docx";
 import * as fs from "fs";
-import { Document, ExternalHyperlink, Footer, FootnoteReferenceRun, ImageRun, Packer, Paragraph, TextRun } from "docx";
 
 const doc = new Document({
     styles: {

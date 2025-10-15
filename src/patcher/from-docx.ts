@@ -176,7 +176,7 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                 // It is possible that the patch text is in the same run
                 // This algorithm is limited to one patch per text run
                 // We break out of the loop once it cannot find any more occurrences
-                // https://github.com/dolanmiu/docx/issues/2267
+                // https://github.com/sunertech/docx/issues/2267
                 while (true) {
                     const { didFindOccurrence } = replacer({
                         json,

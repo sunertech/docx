@@ -2,7 +2,7 @@
 
 -   Examples
 
-    -   [Demos](https://github.com/dolanmiu/docx/tree/master/demo)
+    -   [Demos](https://github.com/sunertech/docx/tree/master/demo)
 
 -   API
 
