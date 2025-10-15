@@ -224,7 +224,7 @@ export class Compiler {
             })),
             ChartsEmbeddings: file.Charts.Entries.map(([_, chartWrapper], index) => {
                 const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.aoa_to_sheet(chartWrapper.View.sheetArrayTable);
+                const ws = XLSX.utils.aoa_to_sheet(chartWrapper.View.dataTable);
                 XLSX.utils.book_append_sheet(wb, ws, `Sheet${index + 1}`);
                 const xlsxData = XLSX.writeXLSX(wb, { type: "buffer" });
                 return {

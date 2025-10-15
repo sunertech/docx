@@ -10,6 +10,7 @@ export type SeriesSharedOptions = {
 };
 
 export type SeriesSharedInternal = {
+    readonly refOffset: number;
     readonly index: number;
 };
 
@@ -22,12 +23,12 @@ const SerieColors = ["accent1", "accent3", "accent4", "accent5", "accent6"] as c
 
 export const addSeriesSharedOptions = (
     root: BaseXmlComponent[],
-    { index, order, name, shape }: SeriesSharedOptions & SeriesSharedInternal,
+    { index, refOffset, order, name, shape }: SeriesSharedOptions & SeriesSharedInternal,
 ): void => {
     root.push(new NumberValueElement("c:idx", index, ""));
     root.push(new NumberValueElement("c:order", order ?? index, ""));
     if (name !== undefined) {
-        root.push(new TextSource("c:tx", { formula: `Sheet1!$A$${index + 2}`, values: [name] }));
+        root.push(new TextSource("c:tx", { formula: `Sheet1!$A$${refOffset + index}`, values: [name] }));
     }
     root.push(
         new ShapeProperties(

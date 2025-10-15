@@ -24,6 +24,7 @@ export type BarChartOptions = {
 };
 
 type InternalOptions = {
+    readonly refOffset: number;
     readonly axisId: {
         readonly category: number;
         readonly value: number;
@@ -52,13 +53,14 @@ export class BarChart extends XmlComponent {
         overlap,
         lineShape,
         axisId,
+        refOffset,
     }: BarChartOptions & InternalOptions) {
         super("c:barChart");
         this.root.push(new StringEnumValueElement<BarDirection>("c:barDir", direction || "col", ""));
         this.root.push(new StringEnumValueElement<BarGrouping>("c:grouping", grouping || "stacked", ""));
         this.root.push(new BooleanElement("c:varyColors", varyColors ?? false, ""));
         series.forEach((item, index) => {
-            this.root.push(new BarSeries({ categories, ...item, index }));
+            this.root.push(new BarSeries({ categories, refOffset, ...item, index }));
         });
         this.root.push(
             typeof gapWidth === "string"

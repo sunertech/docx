@@ -18,16 +18,28 @@ const doc = new Document({
                                 verticalPosition: { align: "center", relative: "page" },
                             },
                             legend: { position: "t" },
+                            valueAxis: {
+                                title: {
+                                    textSource: {
+                                        bodyProperties: { rotation: -5400000 },
+                                        paragraph: { text: "(kWh)" },
+                                    },
+                                },
+                            },
+                            categories: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
                             barChart: {
-                                categories: ["April", "May", "June", "July"],
                                 series: [
                                     {
-                                        name: "Region 1",
-                                        values: [27, 36, 63, 143],
+                                        name: "Geração",
+                                        values: [1037, 962, 1048, 947, 832, 771, 832, 988, 915, 1009, 1044, 1093],
                                     },
+                                ],
+                            },
+                            lineChart: {
+                                series: [
                                     {
-                                        name: "Region 2",
-                                        values: [55, 43, 80, 43],
+                                        name: "Consumo",
+                                        values: [800, 950, 700, 750, 680, 650, 600, 580, 630, 700, 750, 850],
                                     },
                                 ],
                             },

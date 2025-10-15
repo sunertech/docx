@@ -112,6 +112,7 @@ export class PlotArea extends XmlComponent {
         const valueAxisId = 2094734553;
         const dateAxisId = 2094734554;
         const seriesAxisId = 2094734555;
+        let refOffset = 2;
 
         if (areaChart) {
             this.root.push(new AreaChart(areaChart));
@@ -120,7 +121,15 @@ export class PlotArea extends XmlComponent {
             this.root.push(new Area3DChart(area3DChart));
         }
         if (lineChart) {
-            this.root.push(new LineChart(lineChart));
+            this.root.push(
+                new LineChart({
+                    categories,
+                    ...lineChart,
+                    refOffset,
+                    axisId: { category: categoryAxisId, value: valueAxisId },
+                }),
+            );
+            refOffset += lineChart.series?.length || 0;
         }
         if (line3DChart) {
             this.root.push(new Line3DChart(line3DChart));
@@ -146,11 +155,13 @@ export class PlotArea extends XmlComponent {
         if (barChart) {
             this.root.push(
                 new BarChart({
+                    categories,
                     ...barChart,
-                    series: barChart.series.map((serie) => ({ categories: barChart.categories || categories, ...serie })),
+                    refOffset,
                     axisId: { category: categoryAxisId, value: valueAxisId },
                 }),
             );
+            refOffset += barChart.series.length || 0;
         }
         if (bar3DChart) {
             this.root.push(new Bar3DChart(bar3DChart));

@@ -125,7 +125,7 @@
               <c:numCache>
                 <c:ptCount val="12"/>
                 <c:pt idx="0">
-                  <c:v>100.000000</c:v>
+                  <c:v>1037.000000</c:v>
                 </c:pt>
                 <c:pt idx="1">
                   <c:v>962.000000</c:v>
@@ -158,7 +158,7 @@
                   <c:v>1044.000000</c:v>
                 </c:pt>
                 <c:pt idx="11">
-                  <c:v>200.000000</c:v>
+                  <c:v>1093.000000</c:v>
                 </c:pt>
               </c:numCache>
             </c:numRef>
