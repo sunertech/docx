@@ -112,5 +112,9 @@
     },
     "engines": {
         "node": ">=10"
+    },
+    "publishConfig": {
+        "tag": "latest",
+        "access": "public"
     }
 }
