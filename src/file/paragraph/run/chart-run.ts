@@ -35,8 +35,6 @@ export class ChartRun extends Run {
 
     public prepForXml(context: IContext): IXmlableObject | undefined {
         context.file.Charts.add(this.id, this.chartSpace);
-        context.file.ContentTypes.addChart(context.file.Charts.Entries.length);
-
         return super.prepForXml(context);
     }
 }

@@ -1,8 +1,9 @@
 import JSZip from "jszip";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ExternalHyperlink, ImageRun, Paragraph, TextRun } from "@file/paragraph";
+import { ChartRun, ExternalHyperlink, ImageRun, Paragraph, TextRun } from "@file/paragraph";
 
+import { LegendPosition } from "@file/chart";
 import { PatchType, patchDocument } from "./from-docx";
 
 const MOCK_XML = `
@@ -177,6 +178,12 @@ const MOCK_XML = `
                 <w:t>{{image_test}}</w:t>
             </w:r>
         </w:p>
+        <w:p w14:paraId="0ACCEE90" w14:textId="67907499" w:rsidR="00EF161F"
+            w:rsidRDefault="0077578F">
+            <w:r>
+                <w:t>{{chart_test}}</w:t>
+            </w:r>
+        </w:p>
         <w:p w14:paraId="23FA9862" w14:textId="77777777" w:rsidR="0077578F"
             w:rsidRDefault="0077578F" />
         <w:p w14:paraId="01578F2F" w14:textId="3BDC6C85" w:rsidR="007B52ED"
@@ -268,6 +275,46 @@ describe("from-docx", () => {
                                     type: "png",
                                     data: Buffer.from(""),
                                     transformation: { width: 100, height: 100 },
+                                }),
+                            ],
+                        },
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        chart_test: {
+                            type: PatchType.PARAGRAPH,
+                            children: [
+                                new ChartRun({
+                                    width: 530,
+                                    height: 380,
+                                    floating: {
+                                        horizontalPosition: { align: "center", relative: "page" },
+                                        verticalPosition: { align: "center", relative: "page" },
+                                    },
+                                    legend: { position: LegendPosition.TOP },
+                                    valueAxis: {
+                                        title: {
+                                            textSource: {
+                                                bodyProperties: { rotation: -5400000 },
+                                                paragraph: { text: "(kWh)" },
+                                            },
+                                        },
+                                    },
+                                    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                    barChart: {
+                                        series: [
+                                            {
+                                                name: "Generation",
+                                                values: [1037, 962, 1048, 947, 832, 771, 832, 988, 915, 1009, 1044, 1093],
+                                            },
+                                        ],
+                                    },
+                                    lineChart: {
+                                        series: [
+                                            {
+                                                name: "Consumption",
+                                                values: [800, 950, 700, 750, 680, 650, 600, 580, 630, 700, 750, 850],
+                                            },
+                                        ],
+                                    },
                                 }),
                             ],
                         },

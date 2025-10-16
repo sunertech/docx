@@ -444,19 +444,24 @@ export class Compiler {
                 };
             }),
             ContentTypes: {
-                data: xml(
-                    this.formatter.format(file.ContentTypes, {
-                        viewWrapper: file.Document,
-                        file,
-                        stack: [],
-                    }),
-                    {
-                        indent: prettify,
-                        declaration: {
-                            encoding: "UTF-8",
+                data: (() => {
+                    file.Charts.Entries.forEach((_, index) => {
+                        file.ContentTypes.addChart(index + 1);
+                    });
+                    return xml(
+                        this.formatter.format(file.ContentTypes, {
+                            viewWrapper: file.Document,
+                            file,
+                            stack: [],
+                        }),
+                        {
+                            indent: prettify,
+                            declaration: {
+                                encoding: "UTF-8",
+                            },
                         },
-                    },
-                ),
+                    );
+                })(),
                 path: "[Content_Types].xml",
             },
             CustomProperties: {

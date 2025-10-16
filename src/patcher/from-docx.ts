@@ -1,4 +1,5 @@
 import JSZip from "jszip";
+import * as XLSX from "xlsx";
 import { Element, js2xml } from "xml-js";
 
 import { IdentifierManager } from "@export/packer/identifier-manager";
@@ -13,7 +14,9 @@ import { IContext } from "@file/xml-components";
 import { uniqueId } from "@util/convenience-functions";
 import { OutputByType, OutputType } from "@util/output-type";
 
+import { Formatter } from "@export/formatter";
 import { Charts } from "@file/chart/charts";
+import xml from "xml";
 import { appendContentType } from "./content-types-manager";
 import { appendRelationship, getNextRelationshipIndex } from "./relationship-manager";
 import { replacer } from "./replacer";
@@ -225,25 +228,56 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                 });
             }
             const chartEntries = identifierManager.filter(JSON.stringify(json), context.file.Charts.Entries, (item) => item[0]);
-            chartCount = chartEntries.length;
-            if (chartCount > 0) {
+            if (chartEntries.length > 0) {
+                chartCount = chartEntries.length;
                 relationshipAdditions.push({
                     key,
-                    entries: chartEntries.map((item, index) => ({
+                    entries: chartEntries.map(([tempId], index) => ({
                         name: `chart${index + 1}`,
                         path: "charts",
                         type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart",
-                        repl: item[0],
+                        repl: tempId,
                     })),
                 });
             }
+            chartEntries.forEach(([_, chartWrapper], index) => {
+                const chartFilepath = `word/charts/chart${index + 1}.xml`;
+                relationshipAdditions.push({
+                    key: chartFilepath,
+                    entries: [
+                        {
+                            name: `Microsoft_Excel_Sheet${index + 1}.xlsx`,
+                            path: "../embeddings",
+                            type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/package",
+                            repl: "embedSheetId",
+                        },
+                    ],
+                });
+                // add chart xml file
+                const formatter = new Formatter();
+                const chartElement = toJson(
+                    xml(formatter.format(chartWrapper.View, context), {
+                        declaration: { encoding: "UTF-8" },
+                    }),
+                );
+                map.set(chartFilepath, chartElement);
+                // create xlsx data for chart
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(chartWrapper.View.dataTable);
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                const xlsxData = XLSX.writeXLSX(wb, { type: "buffer" });
+                binaryContentMap.set(`word/embeddings/Microsoft_Excel_Sheet${index + 1}.xlsx`, xlsxData);
+            });
         }
 
         map.set(key, json);
     }
 
     for (const { key, entries } of relationshipAdditions) {
-        const relationshipKey = `word/_rels/${key.split("/").pop()}.rels`;
+        const lastIndex = key.lastIndexOf("/");
+        const basePath = key.slice(0, lastIndex);
+        const fileName = key.slice(lastIndex + 1);
+        const relationshipKey = `${basePath}/_rels/${fileName}.rels`;
         const relationshipsJson = map.get(relationshipKey) ?? createRelationshipFile();
         map.set(relationshipKey, relationshipsJson);
 
