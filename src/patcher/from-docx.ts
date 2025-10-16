@@ -233,7 +233,7 @@ export const patchDocument = async <T extends PatchDocumentOutputType = PatchDoc
                 relationshipAdditions.push({
                     key,
                     entries: chartEntries.map(([tempId], index) => ({
-                        name: `chart${index + 1}`,
+                        name: `chart${index + 1}.xml`,
                         path: "charts",
                         type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart",
                         repl: tempId,
