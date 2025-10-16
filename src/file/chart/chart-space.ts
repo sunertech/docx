@@ -18,13 +18,13 @@ class ChartSpaceAttributes extends XmlAttributeComponent<{
 export type ChartSpaceOptions = {
     readonly date1904?: boolean;
     readonly roundedCorners?: boolean;
-    readonly shapeProperties?: IShapePropertiesOptions;
+    readonly spaceShape?: IShapePropertiesOptions;
 } & ChartOptions;
 
 export class ChartSpace extends XmlComponent {
     public readonly options: ChartOptions;
 
-    public constructor({ date1904, roundedCorners, shapeProperties, ...options }: ChartSpaceOptions) {
+    public constructor({ date1904, roundedCorners, spaceShape, ...options }: ChartSpaceOptions) {
         super("c:chartSpace");
         this.options = options;
 
@@ -37,9 +37,7 @@ export class ChartSpace extends XmlComponent {
         );
         this.root.push(new BooleanElement("c:date1904", date1904 ?? true, ""));
         this.root.push(new BooleanElement("c:roundedCorners", roundedCorners ?? false, ""));
-        if (shapeProperties !== undefined) {
-            this.root.push(new ShapeProperties("c:spPr", shapeProperties));
-        }
+        this.root.push(new ShapeProperties("c:spPr", { type: "noFill", outline: { type: "noFill" }, ...spaceShape }));
         this.root.push(new ExternalData({ id: "rId1" }));
 
         this.root.push(new Chart(options));
