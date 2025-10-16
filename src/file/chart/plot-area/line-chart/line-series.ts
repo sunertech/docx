@@ -62,8 +62,8 @@ export class LineSeries extends XmlComponent {
                 value: LineSerieColors[options.index % LineSerieColors.length],
                 outline: {
                     type: "solidFill",
-                    solidFillType: "rgb",
-                    value: "3F6EC3",
+                    solidFillType: "scheme",
+                    value: LineSerieColors[options.index % LineSerieColors.length],
                     width: 47625,
                     cap: LineCap.FLAT,
                     dash: { type: "preset", value: PresetLineDash.SOLID },

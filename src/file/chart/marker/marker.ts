@@ -37,7 +37,7 @@ export class Marker extends XmlComponent {
     public constructor({ symbol, size, shape, extensionList }: MarkerOptions) {
         super("c:marker");
         if (symbol) {
-            this.root.push(new StringEnumValueElement<MarkerStyle>("c:symbol", symbol));
+            this.root.push(new StringEnumValueElement<MarkerStyle>("c:symbol", symbol, ""));
         }
         if (size !== undefined) {
             this.root.push(new NumberValueElement("c:size", size, ""));
