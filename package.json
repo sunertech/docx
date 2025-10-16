@@ -1,6 +1,6 @@
 {
     "name": "@sunertech/docx",
-    "version": "10.0.4",
+    "version": "10.0.5",
     "description": "Easily generate .docx files with JS/TS with a nice declarative API. Works for Node and on the Browser.",
     "type": "module",
     "main": "dist/index.umd.cjs",
