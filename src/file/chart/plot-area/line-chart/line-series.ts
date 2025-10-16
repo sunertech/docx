@@ -5,6 +5,7 @@ import { NumberSource } from "@file/number/number-source";
 import { TextSource } from "@file/text/text-source";
 import { BooleanElement, XmlComponent } from "@file/xml-components";
 import * as XLSX from "xlsx";
+import { DataLabelPosition } from "../data-labels/data-label";
 import { DataLabels, DataLabelsOptions } from "../data-labels/data-labels";
 import { DataPoint, DataPointOptions } from "../data-point/data-point";
 import { ErrorBars, ErrorBarsOptions } from "../error-bars/error-bars";
@@ -86,6 +87,7 @@ export class LineSeries extends XmlComponent {
                               ...dataLabels?.numFmt,
                           },
                       }),
+                position: DataLabelPosition.TOP,
                 ...dataLabels,
             }),
         );

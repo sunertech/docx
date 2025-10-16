@@ -51,19 +51,9 @@ export const addLineChartSharedOptions = (
     series?.forEach((item, index) => {
         root.push(new LineSeries({ categories, ...item, index, refOffset }));
     });
-    root.push(
-        new DataLabels({
-            ...(dataLabels && "delete" in dataLabels
-                ? {}
-                : {
-                      numFmt: {
-                          formatCode: "#,##0",
-                          ...dataLabels?.numFmt,
-                      },
-                  }),
-            ...dataLabels,
-        }),
-    );
+    if (dataLabels) {
+        root.push(new DataLabels(dataLabels));
+    }
     if (lines?.drop !== undefined) {
         root.push(
             new BuilderElement({
