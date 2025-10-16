@@ -28,7 +28,7 @@ export type BarSeriesOptions = SeriesSharedOptions & {
     readonly errorBars?: ErrorBarsOptions;
     readonly categories?: string[];
     readonly values?: number[];
-    readonly shape?: BarShape;
+    readonly shapeFmt?: BarShape;
     readonly extensionList?: ExtensionListOptions;
 };
 
@@ -54,7 +54,7 @@ export class BarSeries extends XmlComponent {
         errorBars,
         categories,
         values,
-        shape,
+        shapeFmt,
         extensionList,
         ...options
     }: BarSeriesOptions & SeriesSharedInternal) {
@@ -104,8 +104,8 @@ export class BarSeries extends XmlComponent {
                 }),
             );
         }
-        if (shape) {
-            this.root.push(new StringEnumValueElement<BarShape>("c:shape", shape, ""));
+        if (shapeFmt) {
+            this.root.push(new StringEnumValueElement<BarShape>("c:shape", shapeFmt, ""));
         }
         if (extensionList) {
             this.root.push(new ExtensionList(extensionList));
