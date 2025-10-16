@@ -51,14 +51,14 @@ export class ChartSpace extends XmlComponent {
             [
                 "",
                 ...(this.options.categories ||
-                    this.options.lineChart?.categories ||
                     this.options.barChart?.categories ||
-                    this.options.lineChart?.series?.[0]?.categories ||
+                    this.options.lineChart?.categories ||
                     this.options.barChart?.series[0]?.categories ||
+                    this.options.lineChart?.series?.[0]?.categories ||
                     []),
             ],
-            ...(this.options.lineChart?.series || []).map((serie) => [serie.name || "", ...(serie.values || [])]),
             ...(this.options.barChart?.series || []).map((serie) => [serie.name || "", ...(serie.values || [])]),
+            ...(this.options.lineChart?.series || []).map((serie) => [serie.name || "", ...(serie.values || [])]),
         ];
     }
 }

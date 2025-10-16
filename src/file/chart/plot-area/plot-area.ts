@@ -121,20 +121,6 @@ export class PlotArea extends XmlComponent {
         if (area3DChart) {
             this.root.push(new Area3DChart(area3DChart));
         }
-        if (lineChart) {
-            this.root.push(
-                new LineChart({
-                    categories,
-                    ...lineChart,
-                    refOffset,
-                    axisId: { category: categoryAxisId, value: valueAxisId },
-                }),
-            );
-            refOffset += lineChart.series?.length || 0;
-        }
-        if (line3DChart) {
-            this.root.push(new Line3DChart(line3DChart));
-        }
         if (stockChart) {
             this.root.push(new StockChart(stockChart));
         }
@@ -178,6 +164,20 @@ export class PlotArea extends XmlComponent {
         }
         if (bubbleChart) {
             this.root.push(new BubbleChart(bubbleChart));
+        }
+        if (lineChart) {
+            this.root.push(
+                new LineChart({
+                    categories,
+                    ...lineChart,
+                    refOffset,
+                    axisId: { category: categoryAxisId, value: valueAxisId },
+                }),
+            );
+            refOffset += lineChart.series?.length || 0;
+        }
+        if (line3DChart) {
+            this.root.push(new Line3DChart(line3DChart));
         }
 
         if (valueAxis || barChart) {

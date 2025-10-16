@@ -25,8 +25,8 @@ export const addSeriesSharedOptions = (
     root: BaseXmlComponent[],
     { index, refOffset, order, name, shape }: SeriesSharedOptions & SeriesSharedInternal,
 ): void => {
-    root.push(new NumberValueElement("c:idx", index, ""));
-    root.push(new NumberValueElement("c:order", order ?? index, ""));
+    root.push(new NumberValueElement("c:idx", refOffset - 2 + index, ""));
+    root.push(new NumberValueElement("c:order", order ?? refOffset - 2 + index, ""));
     if (name !== undefined) {
         root.push(new TextSource("c:tx", { formula: `Sheet1!$A$${refOffset + index}`, values: [name] }));
     }

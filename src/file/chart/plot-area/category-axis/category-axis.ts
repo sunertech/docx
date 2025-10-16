@@ -36,7 +36,7 @@ export type CategoryAxisOptions = {
 // <xsd:element name="extLst" type="CT_ExtensionList" minOccurs="0" maxOccurs="1"/>
 
 export class CategoryAxis extends XmlComponent {
-    public constructor({ auto, label, tick, extensionList, ...options }: CategoryAxisOptions & AxisSharedInternal) {
+    public constructor({ auto, label, extensionList, ...options }: CategoryAxisOptions & AxisSharedInternal) {
         super("c:catAx");
         addAxisSharedOptions(this.root, options);
         this.root.push(new BooleanElement("c:auto", auto ?? true, ""));
@@ -48,11 +48,11 @@ export class CategoryAxis extends XmlComponent {
                     : new NumberValueElement("c:lblOffset", label.offset, ""),
             );
         }
-        if (tick?.label?.skip !== undefined) {
-            this.root.push(new NumberValueElement("c:tickLblSkip", tick.label.skip, ""));
+        if (options.tick?.label?.skip !== undefined) {
+            this.root.push(new NumberValueElement("c:tickLblSkip", options.tick.label.skip, ""));
         }
-        if (tick?.mark?.skip !== undefined) {
-            this.root.push(new NumberValueElement("c:tickMarkSkip", tick.mark.skip, ""));
+        if (options.tick?.mark?.skip !== undefined) {
+            this.root.push(new NumberValueElement("c:tickMarkSkip", options.tick.mark.skip, ""));
         }
         this.root.push(new BooleanElement("c:noMultiLvlLbl", label?.noMultiLevel ?? true, ""));
         if (extensionList) {
