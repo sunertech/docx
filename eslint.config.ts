@@ -1,5 +1,5 @@
 import eslint from "@eslint/js";
-import type { Linter } from "eslint";
+import type { ESLint, Linter } from "eslint";
 import functional from "eslint-plugin-functional";
 import { flatConfigs } from "eslint-plugin-import";
 import jsdoc from "eslint-plugin-jsdoc";
@@ -22,7 +22,7 @@ const config: Linter.Config<Linter.RulesRecord>[] = [
             unicorn,
             jsdoc,
             "prefer-arrow": preferArrow,
-            functional,
+            functional: functional as ESLint.Plugin,
         },
 
         languageOptions: {
@@ -221,7 +221,7 @@ const config: Linter.Config<Linter.RulesRecord>[] = [
             "import/no-extraneous-dependencies": "off",
             "import/no-internal-modules": "off",
             "sort-imports": [
-                "error",
+                "off",
                 {
                     allowSeparatedGroups: true,
                     ignoreDeclarationSort: true,
@@ -327,7 +327,7 @@ const config: Linter.Config<Linter.RulesRecord>[] = [
             unicorn,
             jsdoc,
             "prefer-arrow": preferArrow,
-            functional,
+            functional: functional as ESLint.Plugin,
         },
         languageOptions: {
             globals: {

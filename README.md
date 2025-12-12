@@ -6,6 +6,9 @@
     Easily generate and modify .docx files with JS/TS. Works for Node and on the Browser.
 </p>
 
+<p align="center">
+    This fork supports Chart
+</p>
 ---
 
 [![NPM version][npm-image]][npm-url]
@@ -19,6 +22,7 @@
 <p align="center">
     <img src="https://i.imgur.com/QeL1HuU.png" alt="drawing"/>
 </p>
+
 
 # Demo
 
