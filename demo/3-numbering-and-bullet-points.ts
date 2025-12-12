@@ -243,6 +243,7 @@ const doc = new Document({
                         level: 0,
                     },
                 }),
+
                 new Paragraph({
                     text: "Custom Bullet points",
                     heading: HeadingLevel.HEADING_1,
